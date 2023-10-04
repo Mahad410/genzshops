@@ -4,10 +4,12 @@ import Productactionbuttons from "@/app/components/productactionbuttons";
 import Card from "@/app/components/card";
 import ArrowOutwardTwoToneIcon from '@mui/icons-material/ArrowOutwardTwoTone';
 import Carousalloader from "@/app/components/carousalloader";
+import ProtectedRoutes from "@/app/components/protectedRoutes";
 import { Suspense } from 'react';
 
 export default function Product() {
     return (
+        <ProtectedRoutes>
         <div className={'pt-[40px] pb-[40px] w-full bg-[--bg-intro] min-h-min'}>
             <section className={'flex justify-between min-h-min md:block'}>
                 <section className={'bg-[--bg-intro] pt-[60px] w-[550px]'}>
@@ -64,6 +66,7 @@ export default function Product() {
                 </div>
             </section>
         </div>
+        </ProtectedRoutes>
 
     )
 }

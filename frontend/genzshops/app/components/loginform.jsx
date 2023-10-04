@@ -1,52 +1,66 @@
-"use client"
+'use client'
 import React, { useState } from 'react';
-import { loginUser } from '@/utils/helper'; // Make sure you import your loginUser function.
-import { useRouter } from 'next/navigation'; // Import the router to use for navigation.
-
+import { loginUser } from '@/utils/helper';
+import { useRouter } from 'next/navigation'; // Use 'next/router' instead of 'next/navigation'
+import { useAuth } from '@/utils/context';
+import Link from 'next/link';
 export default function LoginForm() {
-  const router = useRouter(); // Initialize the router.
-
+  const { setToken } = useAuth();
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    username: ' ',
+    identifier: '',
     password: '',
   });
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
+  const [formError, setFormError] = useState(''); // New state for general form-level error
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Remove the handleBlur function because it's not needed for the login form.
-
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.username) {
-      newErrors.username = 'Username is required';
+
+    if (!formData.identifier) {
+      newErrors.identifier = 'Username or email is required';
     }
+
     if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters long';
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (validateForm()) {
       try {
-        await loginUser(formData); // Use the loginUser function to attempt login.
-        router.push('/'); // Redirect to the login page on successful login.
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.message) {
-          setErrors({ ...error.response.data.message[0].messages });
+        const response = await loginUser(formData, setToken);
+        if (!response.error) {
+          setSuccessMessage('Login successful!');
+          if(localStorage.getItem('redirectUrl')=='/login'){
+            router.push('/');
+          }else{
+            router.push(localStorage.getItem('redirectUrl') || '/');
+          }
         } else {
-          console.error(error);
-        }
+            setFormError(response.error);
+          }
+      } catch (error) {
+        console.error(error);
       }
     }
   };
-
+const handleCancel = async (e) => {
+e.preventDefault();
+localStorage.removeItem('redirectUrl');
+router.push('/');
+}
   const renderInput = (name, label, type = 'text') => (
     <div>
       <label htmlFor={name} className="block m-1">
@@ -65,22 +79,16 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="min-h-min w-[600px] p-[24px] border-[4px] m-[auto]">
-      {renderInput('username', 'Username')}
+      {renderInput('identifier', 'Username or Email')}
       {renderInput('password', 'Password', 'password')}
-
-      <div className="form-control">
-        <label className="label cursor-pointer">
-          <span className="label-text flex items-center font-extrabold">
-            <input type="checkbox" checked className="checkbox m-1" />Remember me
-          </span>
-        </label>
-      </div>
-
+      {successMessage && <p className="text-green-600">{successMessage}</p>}
+      {formError && <p className="text-red-600">{formError}</p>}
+      <div>Dont have an account? <Link href='/signup'>Sign Up</Link></div>
       <div className="join w-full flex items-center justify-center mt-5 m-1">
-        <button className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]">
+        <button type='button' className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover.border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]" onClick={handleCancel}>
           Cancel
         </button>
-        <button className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item w-[50%]">
+        <button type='submit' className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover.border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item w-[50%]">
           Log In
         </button>
       </div>

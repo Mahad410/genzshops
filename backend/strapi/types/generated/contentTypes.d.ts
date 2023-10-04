@@ -677,75 +677,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
-export interface ApiCategoryCategory extends Schema.CollectionType {
-  collectionName: 'categories';
-  info: {
-    singularName: 'category';
-    pluralName: 'categories';
-    displayName: 'category';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    categoryName: Attribute.String & Attribute.Required;
-    slug: Attribute.UID<'api::category.category', 'categoryName'>;
-    product: Attribute.Relation<
-      'api::category.category',
-      'manyToOne',
-      'api::product.product'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiCustomerCustomer extends Schema.CollectionType {
-  collectionName: 'customers';
-  info: {
-    singularName: 'customer';
-    pluralName: 'customers';
-    displayName: 'customer';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    userName: Attribute.String & Attribute.Required;
-    email: Attribute.Email & Attribute.Required & Attribute.Unique;
-    password: Attribute.Password & Attribute.Required;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::customer.customer',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::customer.customer',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface ApiOrderOrder extends Schema.CollectionType {
   collectionName: 'orders';
   info: {
@@ -808,11 +739,6 @@ export interface ApiProductProduct extends Schema.CollectionType {
     productSize: Attribute.JSON;
     productThumbnail: Attribute.Media & Attribute.Required;
     productOrginalPrice: Attribute.Integer;
-    categories: Attribute.Relation<
-      'api::product.product',
-      'oneToMany',
-      'api::category.category'
-    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -847,8 +773,6 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::category.category': ApiCategoryCategory;
-      'api::customer.customer': ApiCustomerCustomer;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
     }

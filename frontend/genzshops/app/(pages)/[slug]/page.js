@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import ProductCarousel from "@/app/components/productCarousel";
 import Productactionbuttons from "@/app/components/productactionbuttons";
@@ -5,10 +6,11 @@ import Card from "@/app/components/card";
 import Carousalloader from "@/app/components/carousalloader";
 import fetchProducts from '@/utils/helper';
 import { Suspense } from 'react';
+import { ProtectedRoutes } from '@/app/components/protectedRoutes';
 export default async function Product(props) {
     const product = await fetchProducts(`filters[productSlug][$eq]=${props.params.slug}`);
     return (
-        <>
+        <ProtectedRoutes>
             <div className={'pt-[40px] pb-[40px] w-full bg-[--bg-intro] min-h-min'}>
                 <section className={'flex justify-between min-h-min'}>
                     <section className={'bg-[--bg-intro] pt-[60px] w-full'}>
@@ -33,8 +35,7 @@ export default async function Product(props) {
 
                 </section>
             </div>
-        </>
-
+            </ProtectedRoutes>
     )
 }
 

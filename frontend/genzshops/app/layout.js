@@ -1,9 +1,7 @@
 import Navbar from './components/navbar'
 import './globals.css'
 import { Poppins } from 'next/font/google'
-import {Skranji} from 'next/font/google'
-
-// const inter = Inter({ subsets: ['latin'] })
+import { AuthProvider } from '@/utils/context'
 const poppins = Poppins({ weight:['400','700','900'], subsets: ['latin'] })
 
 export const metadata = {
@@ -16,10 +14,12 @@ export default function RootLayout({ children}) {
 return (
     <html lang="en">
       <body className={`${poppins.className}`}>
+        <AuthProvider>
         <Navbar />
-        <main className={'min-h-screen p-[80px] bg-[--bg-intro]'}>
+        <main className={'min-h-screen p-[40px] bg-[--bg-intro]'}>
               {children}
         </main>
+          </AuthProvider>
         </body>
     </html>
   )

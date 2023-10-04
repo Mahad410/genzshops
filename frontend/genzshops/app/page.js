@@ -22,7 +22,6 @@ export default function Home() {
   const toProducts= () => {
 router.push('/products');
 }
-
   return (
     <main className="h-screen hide-scrollbar">
       <div className='relative'>

@@ -8,7 +8,28 @@ import Link from 'next/link';
 import IntroJoinButtons from './introJoinButton';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import Image from 'next/image';
+import { checkAuthentication } from '@/utils/helper';
+import { useAuth } from '@/utils/context';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 export default function Navbar() {
+  const { token,setToken } = useAuth();
+
+  const router = useRouter();
+  const localToken = localStorage.getItem('token');
+  useEffect(() => {
+    const isAuthenticated = checkAuthentication(localToken);
+    if (!isAuthenticated) {
+      localStorage.setItem('redirectUrl', window.location.pathname);
+    }
+  }, [localToken]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+    window.location.reload();
+  };
+
   return (
     <>
       <div className="navbar bg-[--bg-sidebar] fixed z-20 left-0 right-0">
@@ -32,9 +53,8 @@ export default function Navbar() {
                 <li className='rounded-full font-bold btn p-0 bg-[--bg-li] border-white border-[4px] hover:border-[--bg-li] hover:bg-[#ffffff] mb-1'><Link href="products" className='w-[100%] hover:font-bold text-[--sidebar-text] hover:text-[#000000] transition-text duration-300'><ConnectWithoutContactRoundedIcon color="#5070D" fontSize="large" />Contact Us</Link></li>
                 <li className='rounded-full font-bold btn p-0 bg-[--bg-li] border-white border-[4px] hover:border-[--bg-li] hover:bg-[#ffffff] mb-1'><Link href="products" className='w-[100%] hover:font-bold text-[--sidebar-text] hover:text-[#000000] transition-text duration-300'><InfoRoundedIcon color="#5070D" fontSize="large" />About</Link></li>
                 <li className='rounded-full font-bold btn p-0 bg-[--bg-li] border-white border-[4px] hover:border-[--bg-li] hover:bg-[#ffffff] mb-1'><Link href="products" className='w-[100%] hover:font-bold text-[--sidebar-text] hover:text-[#000000] transition-text duration-300'><WorkRoundedIcon color="#5070D" fontSize="large" />Careers</Link></li>
-                {/* login/signup buttons */}
                 <div className='absolute bottom-[4%] left-[50%] translate-x-[-50%] md:hidden flex'>
-                <IntroJoinButtons f_name={'Sign up'} s_name={'Login'} f_func={''} s_func={''}/>
+                  <IntroJoinButtons f_name={'Sign up'} s_name={'Login'} f_func={''} s_func={''} />
                 </div>
               </ul>
             </div>
@@ -45,56 +65,70 @@ export default function Navbar() {
           <Link href='/' className="text-[2rem] font-luckiest text-[--bg-intro] h-min">GenZ Shop&apos;s</Link>
         </div>
         <div className="navbar-end">
-        <label tabIndex={0} className=''>
-          <input type='search' className='bg-[--bg-li] border-[4px] border-white hover:border-[--bg-li] rounded-full p-2 pl-[16px] pr-[16px]' placeholder="Search">
-          </input>
-          
-      </label>
-      <div className='btn btn-circle border-white border-[4px] hover:border-[--bg-intro] mr-[1rem] ml-[0.2rem]'>
-           <SearchRoundedIcon className='text-[--bg-sidebar]'/>
-          </div>
+          {
+            localToken ? (
+              <>
+                <label tabIndex={0} className=''>
+                  <input type='search' className='bg-[--bg-li] border-[4px] border-white hover:border-[--bg-li] rounded-full p-2 pl-[16px] pr-[16px]' placeholder="Search">
+                  </input>
 
-        <div className="dropdown dropdown-end">
-      <label tabIndex={0} className="btn btn-circle bg-[--bg-li] border-[4px] border-white hover:border-[--bg-li] rounded-full p-2">
-        <div className="indicator">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-[24px] w-[24px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-          <span className="badge badge-sm indicator-item bg-yellow-400 border-none mt-[-10px]"></span>
-        </div>
-      </label>
-      <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
-        <div className="card-body">
-          <span className="font-bold text-lg">8 Items</span>
-          <span className="text-info">Subtotal: $999</span>
-          <div className="card-actions">
-            <button className="btn btn-primary btn-block">View cart</button>
-          </div>
-        </div>
-      </div>
+                </label>
+                <div className='btn btn-circle border-white border-[4px] hover:border-[--bg-intro] mr-[1rem] ml-[0.2rem]'>
+                  <SearchRoundedIcon className='text-[--bg-sidebar]' />
+                </div>
+
+                <div className="dropdown dropdown-end">
+
+                  <label tabIndex={0} className="btn btn-circle bg-[--bg-li] border-[4px] border-white hover:border-[--bg-li] rounded-full p-2">
+                    <div className="indicator">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-[24px] w-[24px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                      <span className="badge badge-sm indicator-item bg-yellow-400 border-none mt-[-10px]"></span>
+                    </div>
+                  </label>
+                  <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
+                    <div className="card-body">
+                      <span className="font-bold text-lg">8 Items</span>
+                      <span className="text-info">Subtotal: $999</span>
+                      <div className="card-actions">
+                        <button className="btn btn-primary btn-block">View cart</button>
+                      </div>
+                    </div>
+                  </div>
 
 
-      
-    </div>
+
+                </div>
+
+                <div className="dropdown dropdown-end ml-[16px] mr-[16px]">
+                  <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                    <div className="w-[45px] h-[45px] rounded-full text-[--bg-intro] text-[1.2rem] border-[4px]">
+                      <p className='flex items-center justify-center w-[45px] h-[45px] text-center'>P</p>
+                    </div>
+                  </label>
+                  <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li>
+                      <Link href={'/profile'} className="justify-between">
+                        Profile
+                      </Link>
+                    </li>
+                    <li className='hover:bg-red-400 rounded-lg'><Link href={''} onClick={handleLogout}>Logout</Link></li>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <div className={'hidden md:flex'}>
+                <div className="join">
+                  <button className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item"><Link href={'/signup'}>Sign Up</Link></button>
+                  <button className="btn bg-[#ffffff] hover:bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item"><Link href={'login'}>Log In</Link></button>
+                </div>
+              </div>
+            )
+          }
 
 
-          {/* <div className={'hidden md:flex'}>
-          <IntroJoinButtons f_name={'Sign up'} s_name={'Login'} f_func={''} s_func={''} />
-          </div> */}
 
-        <div className="dropdown dropdown-end ml-[16px] mr-[16px]">
-        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-          <div className="w-10 rounded-full">
-            <Image src="/images/stock/photo-1534528741775-53994a69daeb.jpg" alt='profile' sizes={'100%'} width={300} height={300}/>
-          </div>
-        </label>
-        <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-          <li>
-            <a className="justify-between">
-              Profile
-            </a>
-          </li>
-          <li className='hover:bg-red-400 rounded-lg'><a>Logout</a></li>
-        </ul>
-      </div>
+
+
 
         </div>
       </div>

@@ -1,7 +1,9 @@
 // "use client"
-// import React, { useState } from 'react';
+// import { useState } from 'react';
+// import { useRouter } from 'next/navigation';
+// import { registerUser } from '@/utils/helper';
 
-// export default function SignupForm() {
+// export default function RegisterForm() {
 //   const [formData, setFormData] = useState({
 //     username: '',
 //     email: '',
@@ -9,12 +11,13 @@
 //     confirmPassword: '',
 //   });
 //   const [errors, setErrors] = useState({});
+//   const router = useRouter();
 
 //   const handleChange = (e) => {
 //     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
+//     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
 //   };
-  
+
 //   const handleBlur = (e) => {
 //     const { name, value } = e.target;
 //     const newErrors = { ...errors };
@@ -33,6 +36,7 @@
 
 //     setErrors(newErrors);
 //   };
+
 //   const validateForm = () => {
 //     const newErrors = {};
 
@@ -58,11 +62,20 @@
 //     return Object.keys(newErrors).length === 0;
 //   };
 
-//   const handleSubmit = (e) => {
+//   const handleSubmit = async (e) => {
 //     e.preventDefault();
-
+  
 //     if (validateForm()) {
-//       // Submit the form to your API or do something with the data
+//       try {
+//         await registerUser(formData);
+//         router.push('/login');
+//       } catch (error) {
+//         if (error.response && error.response.data && error.response.data.message) {
+//           setErrors({ ...error.response.data.message[0].messages });
+//         } else {
+//           console.error(error);
+//         }
+//       }
 //     }
 //   };
 
@@ -91,10 +104,10 @@
 //       {renderInput('confirmPassword', 'Confirm Password', 'password')}
 
 //       <div className="join w-full flex items-center justify-center mt-5 m-1">
-//         <button className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]">
+//         <button type="button" className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]">
 //           Cancel
 //         </button>
-//         <button className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item w-[50%]">
+//         <button type="submit" className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item w-[50%]">
 //           Sign Up
 //         </button>
 //       </div>
@@ -102,7 +115,9 @@
 //   );
 // }
 
-"use client"
+
+
+"use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/utils/helper';
@@ -115,6 +130,8 @@ export default function RegisterForm() {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
+  const [formErrors, setFormErrors] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const router = useRouter();
 
   const handleChange = (e) => {
@@ -122,30 +139,13 @@ export default function RegisterForm() {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    const newErrors = { ...errors };
-
-    if (!value) {
-      newErrors[name] = `${name} is required`;
-    } else if (name === 'email' && !value.includes('@')) {
-      newErrors[name] = 'Invalid email format';
-    } else if (name === 'password' && value.length < 6) {
-      newErrors[name] = 'Password must be at least 6 characters long';
-    } else if (name === 'confirmPassword' && value !== formData.password) {
-      newErrors[name] = 'Passwords do not match';
-    } else {
-      newErrors[name] = '';
-    }
-
-    setErrors(newErrors);
-  };
-
   const validateForm = () => {
     const newErrors = {};
 
     if (!formData.username) {
       newErrors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username is too short';
     }
 
     if (!formData.email) {
@@ -166,23 +166,24 @@ export default function RegisterForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
   
     if (validateForm()) {
       try {
-        await registerUser(formData);
-        router.push('/login');
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.message) {
-          setErrors({ ...error.response.data.message[0].messages });
+        const response = await registerUser(formData);
+        if (!response.error) {
+          setSuccessMessage('Registration successful!');
+          router.push('/login');
         } else {
-          console.error(error);
+          setFormErrors(response.error);
         }
+      } catch (error) {
+        console.error(error);
       }
     }
   };
-
   const renderInput = (name, label, type = 'text') => (
     <div>
       <label htmlFor={name} className="block m-1">
@@ -193,7 +194,6 @@ export default function RegisterForm() {
         name={name}
         value={formData[name]}
         onChange={handleChange}
-        onBlur={handleBlur}
         className="input input-bordered w-full m-1"
       />
       {errors[name] && <span className="text-red-600">{errors[name]}</span>}
@@ -207,11 +207,21 @@ export default function RegisterForm() {
       {renderInput('password', 'Password', 'password')}
       {renderInput('confirmPassword', 'Confirm Password', 'password')}
 
+      {formErrors && <p className="text-red-600 text-center">{formErrors}</p>}
+      {successMessage && <p className="text-green-600 text-center mt-4">{successMessage}</p>}
+
       <div className="join w-full flex items-center justify-center mt-5 m-1">
-        <button type="button" className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]">
+        <button
+          type="button"
+          className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]"
+          onClick={() => router.push('/login')}
+        >
           Cancel
         </button>
-        <button type="submit" className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item w-[50%]">
+        <button
+          type="submit"
+          className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover.border-[#ffffff] rounded-full text-[#000000] hover.text-[--sidebar-text] join-item w-[50%]"
+        >
           Sign Up
         </button>
       </div>

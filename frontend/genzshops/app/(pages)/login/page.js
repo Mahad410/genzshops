@@ -30,11 +30,16 @@
 import React from 'react';
 import LoginForm from '@/app/components/loginform';
 
-export default function Signup() {
+export default function Login({onLogin}) {
   return (
     <div>
       <h1 className='text-[4rem] text-center m-2 font-bold'>Log In</h1>
-        <LoginForm />
+        <LoginForm/>
     </div>
   );
 }
+
+
+
+
+

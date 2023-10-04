@@ -16,13 +16,12 @@ export default function Navbar() {
   const { token,setToken } = useAuth();
 
   const router = useRouter();
-  const localToken = localStorage.getItem('token');
   useEffect(() => {
-    const isAuthenticated = checkAuthentication(localToken);
+    const isAuthenticated = checkAuthentication(token);
     if (!isAuthenticated) {
       localStorage.setItem('redirectUrl', window.location.pathname);
     }
-  }, [localToken]);
+  }, [token]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');

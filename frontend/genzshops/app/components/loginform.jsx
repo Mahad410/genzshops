@@ -1,9 +1,13 @@
 "use client"
 import React, { useState } from 'react';
+import { loginUser } from '@/utils/helper'; // Make sure you import your loginUser function.
+import { useRouter } from 'next/navigation'; // Import the router to use for navigation.
 
 export default function LoginForm() {
+  const router = useRouter(); // Initialize the router.
+
   const [formData, setFormData] = useState({
-    username: '',
+    username: ' ',
     password: '',
   });
   const [errors, setErrors] = useState({});
@@ -13,44 +17,33 @@ export default function LoginForm() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    const newErrors = { ...errors };
+  // Remove the handleBlur function because it's not needed for the login form.
 
-    if (!value) {
-      newErrors[name] = `${name} is required`;
-    } else if (name === 'email' && !value.includes('@')) {
-      newErrors[name] = 'Invalid email format';
-    } else if (name === 'password' && value.length < 6) {
-      newErrors[name] = 'Password must be at least 6 characters long';
-    } else if (name === 'confirmPassword' && value !== formData.password) {
-      newErrors[name] = 'Passwords do not match';
-    } else {
-      newErrors[name] = '';
-    }
-
-    setErrors(newErrors);
-  }; 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.username) {
       newErrors.username = 'Username is required';
     }
-
     if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters long';
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (validateForm()) {
-      // Submit the form to your API or do something with the login data
+      try {
+        await loginUser(formData); // Use the loginUser function to attempt login.
+        router.push('/'); // Redirect to the login page on successful login.
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          setErrors({ ...error.response.data.message[0].messages });
+        } else {
+          console.error(error);
+        }
+      }
     }
   };
 
@@ -64,7 +57,6 @@ export default function LoginForm() {
         name={name}
         value={formData[name]}
         onChange={handleChange}
-        onBlur={handleBlur}
         className="input input-bordered w-full m-1"
       />
       {errors[name] && <span className="text-red-600">{errors[name]}</span>}
@@ -77,11 +69,12 @@ export default function LoginForm() {
       {renderInput('password', 'Password', 'password')}
 
       <div className="form-control">
-  <label className="label cursor-pointer">
-    <span className="label-text flex items-center font-extrabold"><input type="checkbox" checked="checked" className="checkbox m-1" />Remember me</span> 
-    
-  </label>
-</div>
+        <label className="label cursor-pointer">
+          <span className="label-text flex items-center font-extrabold">
+            <input type="checkbox" checked className="checkbox m-1" />Remember me
+          </span>
+        </label>
+      </div>
 
       <div className="join w-full flex items-center justify-center mt-5 m-1">
         <button className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]">

@@ -105,7 +105,7 @@
 "use client"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchAPI } from '@/utils/api';
+import { registerUser } from '@/utils/helper';
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -119,9 +119,9 @@ export default function RegisterForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
-  
+
   const handleBlur = (e) => {
     const { name, value } = e.target;
     const newErrors = { ...errors };
@@ -140,7 +140,7 @@ export default function RegisterForm() {
 
     setErrors(newErrors);
   };
-  
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -168,18 +168,17 @@ export default function RegisterForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (validateForm()) {
-      const response = await fetchAPI('/auth/local/register', {
-        method: 'POST',
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
+      try {
+        await registerUser(formData);
         router.push('/login');
-      } else {
-        const data = await response.json();
-        setErrors({ ...data.data[0].messages });
+      } catch (error) {
+        if (error.response && error.response.data && error.response.data.message) {
+          setErrors({ ...error.response.data.message[0].messages });
+        } else {
+          console.error(error);
+        }
       }
     }
   };
@@ -209,10 +208,10 @@ export default function RegisterForm() {
       {renderInput('confirmPassword', 'Confirm Password', 'password')}
 
       <div className="join w-full flex items-center justify-center mt-5 m-1">
-        <button className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]">
+        <button type="button" className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item w-[50%]">
           Cancel
         </button>
-        <button className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item w-[50%]">
+        <button type="submit" className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item w-[50%]">
           Sign Up
         </button>
       </div>

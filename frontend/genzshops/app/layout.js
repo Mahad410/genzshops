@@ -16,7 +16,7 @@ return (
       <body className={`${poppins.className}`}>
         <AuthProvider>
         <Navbar />
-        <main className={'min-h-screen p-[40px] bg-[--bg-intro]'}>
+        <main className={'min-h-screen p-[80px] pl-[0] pr-[0] bg-[--bg-intro] box-border'}>
               {children}
         </main>
           </AuthProvider>

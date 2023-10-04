@@ -37,20 +37,18 @@ export default function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (validateForm()) {
       try {
         const response = await loginUser(formData, setToken);
         if (!response.error) {
           setSuccessMessage('Login successful!');
-          if(localStorage.getItem('redirectUrl')=='/login'){
-            router.push('/');
-          }else{
-            router.push(localStorage.getItem('redirectUrl') || '/');
-          }
+          const redirectUrl = localStorage.getItem('redirectUrl') || '/';
+          console.log(`Redirecting to ${redirectUrl}`);
+          router.push(redirectUrl);
         } else {
-            setFormError(response.error);
-          }
+          setFormError(response.error);
+        }
       } catch (error) {
         console.error(error);
       }

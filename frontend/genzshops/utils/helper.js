@@ -29,9 +29,47 @@ const fetchProducts = async (params) => {
 export default fetchProducts;
 
 
+// export const registerUser = async (userData) => {
+//   try {
+//     const response = await axios.post('http://localhost:1337/api/auth/local/register', userData);
+//     return response.data;
+//   } catch (error) {
+//     if (error.response.data.error && error.response.data.error.status === 400) {
+//       const validationErrors = error.response.data.error.message;
+//       return { error: validationErrors };
+//     } else {
+//       return { error: error.response.data.error.message };
+//     }
+//   }
+// };
+
+
+// export const registerUser = async (userData) => {
+//   try {
+//     const response = await axios.post('http://localhost:1337/api/auth/local/register', userData);
+//     const { user, jwt } = response.data;
+
+//     // Send an email to verify the user's email address
+//     await axios.post('http://localhost:1337/api/email-verification', {
+//       email: user.email,
+//       token: jwt,
+//     });
+
+//     return response.data;
+//   } catch (error) {
+//     if (error.response.data.error && error.response.data.error.status === 400) {
+//       const validationErrors = error.response.data.error.message;
+//       return { error: validationErrors };
+//     } else {
+//       return { error: error.response.data.error.message };
+//     }
+//   }
+// };
+
 export const registerUser = async (userData) => {
   try {
     const response = await axios.post('http://localhost:1337/api/auth/local/register', userData);
+    const { user, jwt } = response.data;
     return response.data;
   } catch (error) {
     if (error.response.data.error && error.response.data.error.status === 400) {

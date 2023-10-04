@@ -174,8 +174,7 @@ export default function RegisterForm() {
       try {
         const response = await registerUser(formData);
         if (!response.error) {
-          setSuccessMessage('Registration successful!');
-          router.push('/login');
+          setSuccessMessage('Registration successful! Now confirm your email to activate your account.');
         } else {
           setFormErrors(response.error);
         }

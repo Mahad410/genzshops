@@ -4,8 +4,8 @@ import { checkAuthentication } from '@/utils/helper';
 import { useAuth } from '@/utils/context';
 import Login from '../(pages)/login/page';
 export const ProtectedRoutes = ({ children }) => {
-  // const {token} = useAuth();
-  const token = localStorage.getItem('token');
+  const {token} = useAuth();
+  const localToken = localStorage.getItem('token');
   useEffect(() => {
     const isAuthenticated = checkAuthentication(token);
     if (!isAuthenticated) {

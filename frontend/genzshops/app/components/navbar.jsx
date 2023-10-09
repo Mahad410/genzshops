@@ -24,7 +24,6 @@ export default function Navbar() {
   }, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
     setToken(null);
     window.location.reload();
   };
@@ -65,7 +64,7 @@ export default function Navbar() {
         </div>
         <div className="navbar-end">
           {
-            localToken ? (
+            token ? (
               <>
                 <label tabIndex={0} className=''>
                   <input type='search' className='bg-[--bg-li] border-[4px] border-white hover:border-[--bg-li] rounded-full p-2 pl-[16px] pr-[16px]' placeholder="Search">

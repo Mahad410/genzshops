@@ -60,30 +60,6 @@ export const loginUser = async (loginData, setToken) => {
   }
 };
 
-// fetchprofile api
-// export const fetchProfile = async (token) => {
-//   try {
-//     const response = await axios.get('http://localhost:1337/api/users', {
-//       headers: {
-//         Authorization: `Bearer ${token}`, // Include the user's token for authentication
-//       },
-//     });
-    
-//     if (response.status === 200) {
-//       // Return the user's profile data from the response.
-//       return response.data;
-//     } else {
-//       // Handle other status codes or errors as needed.
-//       throw new Error('Failed to fetch user profile');
-//     }
-//   } catch (error) {
-//     // Handle any unexpected errors that might occur during the request.
-//     console.error('An error occurred while fetching user profile:', error);
-//     throw error;
-//   }
-// };
-
-
 export const checkAuthentication = (token) => {
  return !!token
 };

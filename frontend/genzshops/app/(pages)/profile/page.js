@@ -5,8 +5,10 @@ import { ProtectedRoutes } from '@/app/components/protectedRoutes';
 import Loader from '@/app/loader';
 import { useAuth } from '@/utils/context';
 import { getUser } from '@/utils/helper';
+import { useRouter } from 'next/navigation';
 
 export default function Profile() {
+  const router = useRouter();
   const inputRef = useRef(null);
   const { token } = useAuth();
   const [formData, setFormData] = useState({
@@ -42,6 +44,11 @@ export default function Profile() {
     setUpdateData(value); // Update the updateData state as the user types
   }
 
+  const handleCancel = (e) => {
+    e.preventDefault();
+    setUpdateData(formData.username); // Reset updateData to the value in formData
+    router.back();
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Use the updateData state value for username
@@ -104,7 +111,7 @@ export default function Profile() {
           </span>
         </div>
         <div className='flex items-center'>
-          <button className="btn bg-red-500 hover.bg-red-400 border-[4px] border-[#000000] hover-border-[#ffffff] rounded-full font-bold text-[#ffffff] mt-[30px] h-min mr-1" >Cancel</button>
+          <button className="btn bg-red-500 hover:bg-red-400 border-[4px] border-[#000000] hover-border-[#ffffff] rounded-full font-bold text-[#ffffff] mt-[30px] h-min mr-1" onClick={handleCancel}>Cancel</button>
           <button className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[4px] border-[#000000] hover-border-[#ffffff] rounded-full font-bold text-[#000000] hover-text-[--sidebar-text] mt-[30px] h-min" type="submit" onClick={handleSubmit}>Save Changes</button>
         </div>
       </form>

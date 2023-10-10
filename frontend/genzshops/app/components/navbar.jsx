@@ -5,9 +5,7 @@ import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithout
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import WorkRoundedIcon from '@mui/icons-material/WorkRounded';
 import Link from 'next/link';
-import IntroJoinButtons from './introJoinButton';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import Image from 'next/image';
 import { checkAuthentication } from '@/utils/helper';
 import { useAuth } from '@/utils/context';
 import { useEffect } from 'react';
@@ -52,7 +50,10 @@ export default function Navbar() {
                 <li className='rounded-full font-bold btn p-0 bg-[--bg-li] border-white border-[4px] hover:border-[--bg-li] hover:bg-[#ffffff] mb-1'><Link href="products" className='w-[100%] hover:font-bold text-[--sidebar-text] hover:text-[#000000] transition-text duration-300'><InfoRoundedIcon color="#5070D" fontSize="large" />About</Link></li>
                 <li className='rounded-full font-bold btn p-0 bg-[--bg-li] border-white border-[4px] hover:border-[--bg-li] hover:bg-[#ffffff] mb-1'><Link href="products" className='w-[100%] hover:font-bold text-[--sidebar-text] hover:text-[#000000] transition-text duration-300'><WorkRoundedIcon color="#5070D" fontSize="large" />Careers</Link></li>
                 <div className='absolute bottom-[4%] left-[50%] translate-x-[-50%] md:hidden flex'>
-                  <IntroJoinButtons f_name={'Sign up'} s_name={'Login'} f_func={''} s_func={''} />
+                <div className="join">
+                  <button className="btn bg-[--bg-li] hover:bg-[#ffffff] border-white border-[4px] hover:border-[--bg-li] rounded-full text-[--sidebar-text] hover:text-[#000000] join-item"><Link href={'/signup'}>Sign Up</Link></button>
+                  <button className="btn bg-[#ffffff] hover:bg-[--bg-li] border-[--bg-li] border-[4px] hover:border-[#ffffff] rounded-full text-[#000000] hover:text-[--sidebar-text] join-item"><Link href={'login'}>Log In</Link></button>
+                </div>
                 </div>
               </ul>
             </div>

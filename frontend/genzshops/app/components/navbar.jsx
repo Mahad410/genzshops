@@ -10,6 +10,7 @@ import { checkAuthentication } from '@/utils/helper';
 import { useAuth } from '@/utils/context';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 export default function Navbar() {
   const { token,setToken } = useAuth();
 
@@ -99,10 +100,8 @@ export default function Navbar() {
                 </div>
 
                 <div className="dropdown dropdown-end ml-[16px] mr-[16px]">
-                  <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                    <div className="w-[45px] h-[45px] rounded-full text-[--bg-intro] text-[1.2rem] border-[4px]">
-                      <p className='flex items-center justify-center w-[45px] h-[45px] text-center'>P</p>
-                    </div>
+                  <label tabIndex={0} className="btn btn-ghost btn-circle border-[4px] border-[#ffffff] hover:border-[--bg-intro]">
+                      <AccountCircleTwoToneIcon className="text-[--bg-intro] w-[40px] h-[40px] hover:text-[#ffffff]"/>
                   </label>
                   <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                     <li>

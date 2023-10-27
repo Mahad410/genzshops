@@ -1,10 +1,12 @@
-'use client';
 import { useEffect } from 'react';
 import { checkAuthentication } from '@/utils/helper';
 import { useAuth } from '@/utils/context';
-import dynamic from 'next/dynamic';
+import Login from '@/app/(pages)/login/page';
+import { usePathname } from 'next/navigation';
+
 export const ProtectedRoutes = ({ children }) => {
   const { token } = useAuth();
+  const path = usePathname();
   
   useEffect(() => {
     // Check authentication on the client side.
@@ -12,22 +14,14 @@ export const ProtectedRoutes = ({ children }) => {
       const isAuthenticated = checkAuthentication(token);
       if (!isAuthenticated) {
         // Set redirectUrl in localStorage.
-        localStorage.setItem('redirectUrl', window.location.pathname);
+        localStorage.setItem('redirectUrl', path);
       }
     }
   }, [token]);
 
-  // Render the children only if authentication is successful.
-  if (token) {
-    return <>{children}</>;
-  }
-
-  // If not authenticated, you can use dynamic imports to load the Login component.
-  const Login = dynamic(() => import('@/app/(pages)/login/page'));
-
   return (
-    <div>
-      <Login />
-    </div>
+    <>
+      {token ? children : <Login />}
+    </>
   );
 };

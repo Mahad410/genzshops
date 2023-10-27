@@ -32,10 +32,13 @@ export default function Products() {
           <h1 className="font-luckiest text-[3rem] md:text-[6rem] text-[--bg-intro-text] sticky top-[20px] w-full pt-[40px] bg-[--bg-intro] z-10">
             Products
           </h1>
-          <div className="grid grid-cols-1 place-items-center md:grid-cols-2 lg:grid-cols-3 gap-5 my-14 px-5 md:px-0">
+
+          <div className="m-[auto] w-full pl-[0.5rem] pr-[0.5rem] md:pl-[1rem] md:pr-[1rem]">
+          <div className="grid grid-cols-1 gap-[1.5rem] md:grid-cols-2 xl:grid-cols-4 place-items-center">
             {products.map((product) => (
               <Card productData={product} key={product?.id} />
             ))}
+          </div>
           </div>
         </section>
       )}

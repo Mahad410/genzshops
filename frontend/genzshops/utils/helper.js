@@ -11,11 +11,11 @@ export const getDiscountedPricePercentage = (
 
   const discountPercentage = (discount / originalPrice) * 100;
 
-  return discountPercentage.toFixed(2);
+  return discountPercentage.toFixed(0);
 };
 
 // api to fetch products
-const fetchProducts = async (params) => {
+const fetchProducts = async (params='') => {
   const reqOptions = {
     headers: {
       Authorization: `Bearer ${STRAPI_TOKEN}`,

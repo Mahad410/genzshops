@@ -6,33 +6,41 @@ import { getDiscountedPricePercentage } from "@/utils/helper";
 export default function card({ productData: { attributes: productData, productId } }) {
   return (
     <>
-      <div className="card w-full md:w-96 bg-[--bg-sidebar] shadow-xl relative overflow-hidden">
-        <Favouritebtn />
-        <Link href={productData.productSlug}>
-          <figure className='w-full min-h-[250px]'>
-            <Image src={productData.productThumbnail.data.attributes.url} alt={productData.productTitle} className={'cursor-pointer invert-[100%]'} width={500} height={500} />
-          </figure>
-        </Link>
-        <div className="card-body text-[--bg-intro]">
-          <h2 className="card-title text-[1.8rem]">{productData.productTitle}</h2>
-          <div className='w-full flex items-center justify-between'>
-            <p className='text-base font-medium'>{productData.productPrice} Pkr</p>
-            {productData.productOrginalPrice && (
-              <div>
-                <p className="text-base font-medium line-through text-red-500">
-                  {productData.productOrginalPrice} Pkr
-                </p>
-                <p className="text-base font-medium text-green-500">
+      <div className="card w-full md:w-96 bg-base-100 shadow-xl">
+        <figure className='w-full min-h-[250px]'>
+          <Image src={productData.productThumbnail.data.attributes.url} alt={productData.productTitle} className={'cursor-pointer'} width={500} height={500} />
+        </figure>
+        <div className="card-body">
+          <h2 className="card-title">
+            {productData.productTitle}
+            <div className="badge badge-secondary">NEW</div>
+          </h2>
+          <p>
+            {productData.productPrice} Pkr
+            {getDiscountedPricePercentage(
+              productData.productOrginalPrice,
+              productData.productPrice
+            ) > 0 && (
+                <span className='badge badge-success ml-2'>
                   {getDiscountedPricePercentage(
                     productData.productOrginalPrice,
                     productData.productPrice
-                  )}
-                  % off
-                </p>
-              </div>
-            )}
-
+                  )}% Off
+                </span>
+              )}
+          </p>
+          <div className="card-actions justify-end">
+            <div className="badge badge-outline">Fashion</div>
+            <div className="badge badge-outline">Products</div>
           </div>
+        </div>
+        <div className='join my-4 flex items-center justify-around'>
+          <button type='button' className='btn btn-neutral w-1/3'>Add to Cart</button>
+          <Link href={`/${productData.productSlug}`} className='w-1/2'>
+            <button type='button' className='btn btn-neutral w-full'>
+              View Product
+            </button>
+          </Link>
         </div>
       </div>
     </>

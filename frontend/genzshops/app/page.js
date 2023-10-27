@@ -19,13 +19,6 @@ export default function Home() {
   const handleImageLoad = () => {
     setLoading(false);
   };
-
-  const router = useRouter();
-
-  const toProducts = () => {
-    router.push("/products");
-  };
-
   return (
     <main className="h-screen w-full hide-scrollbar box-border">
       <div className="relative">

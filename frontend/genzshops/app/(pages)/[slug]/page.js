@@ -8,6 +8,9 @@ import CarousalLoader from "@/app/components/carousalloader";
 import fetchProducts from '@/utils/helper';
 import { Suspense } from 'react';
 import { ProtectedRoutes } from '@/app/components/protectedRoutes';
+import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';
+import CheckCircleTwoToneIcon from '@mui/icons-material/CheckCircleTwoTone';
+import { getDiscountedPricePercentage } from '@/utils/helper';
 
 export default function Product(props) {
     const [product, setProduct] = useState(null);
@@ -27,26 +30,35 @@ export default function Product(props) {
 
     return (
         <ProtectedRoutes>
-            <div className={'pt-[40px] pb-[40px] w-full bg-[--bg-intro] min-h-min'}>
-                <section className={'flex justify-between min-h-min'}>
-                    <section className={'bg-[--bg-intro] pt-[60px] w-full'}>
-                        <Suspense fallback={<CarousalLoader />}>
-                            <ProductCarousel />
-                        </Suspense>
+            <div className={'w-full min-h-min'}>
+                <section className={'flex justify-between min-h-min py-10'}>
+                    <section className={'w-full'}>
+                        <ProductCarousel productData={product} />
                     </section>
-                    <section className={'bg-[--bg-intro] w-full p-[40px] pr-[40px]'}>
+                    <section className={'w-full'}>
                         {product && (
                             <>
-                                <h1 className={'font-luckiest text-[3rem] md:text-[6rem] text-[--bg-intro-text] pt-[20px]'}>
-                                    {product.data[0].attributes.productTitle}
+                                <h1 className={'text-[--bg-intro-text] text-[2.5rem] font-bold'}>
+                                    {product?.data[0]?.attributes?.productTitle}
                                 </h1>
-                                <p className={'font-luckiest text-[3rem] text-[--bg-intro-text] bg-[--bg-intro]'}>
-                                    {product.data[0].attributes.productPrice} Pkr
+                                <p className={'text-[--bg-intro-text] text-[2rem] font-semibold'}>
+                                    {product?.data[0]?.attributes?.productPrice} Pkr
+                                    {getDiscountedPricePercentage(
+                                        product?.data[0]?.attributes?.productOrginalPrice,
+                                        product?.data[0]?.attributes?.productPrice
+                                    ) > 0 && (
+                                            <span className='font-bold badge-xl rounded-full px-4 badge-success mx-5'>
+                                                Save {getDiscountedPricePercentage(
+                                                    product?.data[0]?.attributes?.productOrginalPrice,
+                                                    product?.data[0]?.attributes?.productPrice
+                                                )}%
+                                            </span>
+                                        )}
                                 </p>
-                                <p className={'text-[3.5rem] font-luckiest bg-[--bg-intro] text-[--bg-intro-text]'}>
+                                <p className={'text-[--bg-intro-text] text-[1.5rem]'}>
                                     {product.data[0].attributes.productDescription}
                                 </p>
-                                <section className={'p-10'}>
+                                <section className={''}>
                                     <ProductActionButtons />
                                 </section>
                             </>

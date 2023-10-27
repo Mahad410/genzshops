@@ -14,13 +14,16 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  --bg-intro:#ffc300;
+  /* --bg-intro:#ffc300; */
+  --bg-intro:#ffffff;
   --bg-intro-text: #000000;
   --bg-navbar: rgba(0, 0, 0, .1);
   --bg-sidebar: #000000;
   --sidebar-text: #000000;
-  --bg-li: #ffc400;
- --bg-btn: #ffc300; 
+  /* --bg-li: #ffc400;
+ --bg-btn: #ffc300;  */
+ --bg-li:#ffffff;
+ --bg-btn: #ffffff;
  --svg: #000000;
  --text-body: #000000;
  --text-outline: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
@@ -62,7 +65,8 @@
 }
 .swiper-button-next,.swiper-button-prev{
   color: var(--bg-intro-text) !important;
-  width: 30px;
+  width: 60px !important;
+  height: 60px !important;
 }
 .swiper-button-next:after, .swiper-rtl .swiper-button-prev:after , .swiper-button-prev:after, .swiper-rtl .swiper-button-next:after{
   content:'' !important;
@@ -187,8 +191,7 @@ body::-webkit-scrollbar {
 }
 
 .bg-gradient-shimmer {
-    /*background: linear-gradient(to right, var(--bg-btn) 0%, var(--bg-btn) 25%, var(--bg-btn) 50%, #ffe000 75%, var(--bg-btn) 100%);*/
-  background: linear-gradient(to right, #333333 0%, #666666 50%, #333333 100%);
+    background: linear-gradient(to right, #333333 0%, #666666 50%, #333333 100%);
   background-size: 200% 100%;
   animation: gradient-shimmer 1.5s infinite ease-in-out;
 }

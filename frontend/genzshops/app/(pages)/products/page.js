@@ -1,10 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import fetchProducts from "@/utils/helper";
-import Loading from "@/app/(pages)/products/loading"; // Make sure to import 'Loading' properly.
+import React, { useEffect, useState, memo } from "react";
+import { fetchProducts } from "@/utils/helper";
+import Loading from "@/app/(pages)/products/loading";
 import { ProtectedRoutes } from "@/app/components/protectedRoutes";
 import Card from "@/app/components/card";
 import Categories from "@/app/components/categories";
+
+const MemoizedCard = memo(({ productData }) => (
+  <Card productData={productData} key={productData?.id} />
+));
 
 export default function Products() {
   const [products, setProducts] = useState([]);
@@ -28,17 +32,17 @@ export default function Products() {
         <Loading />
       ) : (
         <section className="bg-[--bg-intro] min-h-screen">
-          <Categories />
-          <h1 className="font-luckiest text-[3rem] md:text-[6rem] text-[--bg-intro-text] sticky top-[20px] w-full pt-[40px] bg-[--bg-intro] z-10">
+          <Categories productData={products} />
+          <h1 className="font-extrabold text-[3rem] md:text-[6rem] text-[--bg-intro-text] sticky top-[20px] w-full pt-[40px] bg-[--bg-intro] z-10">
             Products
           </h1>
 
           <div className="m-[auto] w-full pl-[0.5rem] pr-[0.5rem] md:pl-[1rem] md:pr-[1rem]">
-          <div className="grid grid-cols-1 gap-[1.5rem] md:grid-cols-2 xl:grid-cols-4 place-items-center">
-            {products.map((product) => (
-              <Card productData={product} key={product?.id} />
-            ))}
-          </div>
+            <div className="grid grid-cols-1 gap-[1.5rem] md:grid-cols-2 xl:grid-cols-4 place-items-center">
+              {products.map((product) => (
+                <MemoizedCard productData={product} />
+              ))}
+            </div>
           </div>
         </section>
       )}

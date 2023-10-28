@@ -3,7 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link';
 import Favouritebtn from "@/app/components/favouritebtn";
 import { getDiscountedPricePercentage } from "@/utils/helper";
+import categories from './categories';
 export default function card({ productData: { attributes: productData, productId } }) {
+  console.log(productData)
   return (
     <>
       <div className="card w-full md:w-96 bg-base-100 shadow-xl">
@@ -13,7 +15,9 @@ export default function card({ productData: { attributes: productData, productId
         <div className="card-body">
           <h2 className="card-title">
             {productData.productTitle}
-            <div className="badge badge-secondary">NEW</div>
+            {
+              productData.new && <div className="badge badge-secondary">{'New'}</div>
+            }
           </h2>
           <p>
             {productData.productPrice} Pkr
@@ -30,8 +34,11 @@ export default function card({ productData: { attributes: productData, productId
               )}
           </p>
           <div className="card-actions justify-end">
-            <div className="badge badge-outline">Fashion</div>
-            <div className="badge badge-outline">Products</div>
+            {
+              productData?.productCategories?.data?.map((category) => (
+                <div key={category?.id} className="badge badge-outline">{category?.attributes?.name}</div>
+              ))
+            }
           </div>
         </div>
         <div className='join my-4 flex items-center justify-around'>

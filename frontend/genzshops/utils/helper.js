@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import { STRAPI_TOKEN, STRAPI_URL } from '@/utils/url';
 import axios from 'axios';
 import { headers } from '@/next.config';
@@ -15,18 +14,41 @@ export const getDiscountedPricePercentage = (
 };
 
 // api to fetch products
-const fetchProducts = async (params='') => {
-  const reqOptions = {
+export const fetchProducts = async (params = '') => {
+  const config = {
     headers: {
       Authorization: `Bearer ${STRAPI_TOKEN}`,
     },
-    method: 'GET',
+  };
+
+  try {
+    const response = await axios.get(`${STRAPI_URL}/api/products?populate=*&${params}`, config);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch products');
   }
-  const res = await fetch(`${STRAPI_URL}/api/products?populate=*&${params}`, reqOptions);
-  const data = await res.json();
-  return data;
 };
-export default fetchProducts;
+
+// api to fetch categories
+export const fetchCategories = async (params = '') => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${STRAPI_TOKEN}`,
+    },
+  };
+
+  try {
+    const response = await axios.get(`${STRAPI_URL}/api/categories?populate=*&${params}`, config);
+    const data = response.data;
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch categories');
+  }
+};
+
 
 export const registerUser = async (userData) => {
   try {

@@ -16,7 +16,9 @@
       "type": "string",
       "required": true,
       "minLength": 3,
-      "unique": true
+      "unique": true,
+      "maxLength": 20,
+      "default": "abcdefasdasdasdadasdasdasd"
     },
     "productPrice": {
       "type": "integer",
@@ -58,6 +60,17 @@
     },
     "productOrginalPrice": {
       "type": "integer"
+    },
+    "productCategories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category",
+      "mappedBy": "product"
+    },
+    "new": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

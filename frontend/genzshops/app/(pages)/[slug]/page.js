@@ -5,7 +5,7 @@ import ProductCarousel from "@/app/components/productCarousel";
 import ProductActionButtons from "@/app/components/productactionbuttons";
 import Card from "@/app/components/card";
 import CarousalLoader from "@/app/components/carousalloader";
-import fetchProducts from '@/utils/helper';
+import {fetchProducts} from '@/utils/helper';
 import { Suspense } from 'react';
 import { ProtectedRoutes } from '@/app/components/protectedRoutes';
 import CancelTwoToneIcon from '@mui/icons-material/CancelTwoTone';

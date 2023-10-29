@@ -40,7 +40,7 @@ export default function Products() {
           <div className="m-[auto] w-full pl-[0.5rem] pr-[0.5rem] md:pl-[1rem] md:pr-[1rem]">
             <div className="grid grid-cols-1 gap-[1.5rem] md:grid-cols-2 xl:grid-cols-4 place-items-center">
               {products.map((product) => (
-                <MemoizedCard productData={product} />
+                <MemoizedCard productData={product} key={product?.id}/>
               ))}
             </div>
           </div>

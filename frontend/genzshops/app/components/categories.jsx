@@ -8,7 +8,6 @@ const IntroSingleButton = memo(({ category }) => (
     <Image
       src={category?.attributes?.image?.data?.attributes?.url}
       alt={category?.attributes?.name}
-      objectFit='cover'
       sizes={'100%'}
       width={300}
       height={300}

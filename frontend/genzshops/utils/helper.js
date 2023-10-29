@@ -1,7 +1,9 @@
 import { STRAPI_TOKEN, STRAPI_URL } from '@/utils/url';
 import axios from 'axios';
-import { headers } from '@/next.config';
+import {LRUCache} from 'lru-cache';
 // discount logic
+const cache = new LRUCache({ max: 500, maxAge: 1000 * 60 * 60 }); // Cache up to 500 items for 1 hour
+
 export const getDiscountedPricePercentage = (
   originalPrice,
   discountedPrice
@@ -13,8 +15,15 @@ export const getDiscountedPricePercentage = (
   return discountPercentage.toFixed(0);
 };
 
+
 // api to fetch products
 export const fetchProducts = async (params = '') => {
+  const cacheKey = `products_${params}`;
+  // Check if the data is already in the cache
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
   const config = {
     headers: {
       Authorization: `Bearer ${STRAPI_TOKEN}`,
@@ -24,6 +33,8 @@ export const fetchProducts = async (params = '') => {
   try {
     const response = await axios.get(`${STRAPI_URL}/api/products?populate=*&${params}`, config);
     const data = response.data;
+    // Store the data in the cache
+    cache.set(cacheKey, data);
     return data;
   } catch (error) {
     console.error(error);
@@ -33,6 +44,14 @@ export const fetchProducts = async (params = '') => {
 
 // api to fetch categories
 export const fetchCategories = async (params = '') => {
+  const cacheKey = `categories_${params}`;
+
+  // Check if the data is already in the cache
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+
   const config = {
     headers: {
       Authorization: `Bearer ${STRAPI_TOKEN}`,
@@ -42,6 +61,10 @@ export const fetchCategories = async (params = '') => {
   try {
     const response = await axios.get(`${STRAPI_URL}/api/categories?populate=*&${params}`, config);
     const data = response.data;
+
+    // Store the data in the cache
+    cache.set(cacheKey, data);
+
     return data;
   } catch (error) {
     console.error(error);
@@ -100,18 +123,3 @@ export const getUser = async (token) => {
     throw error; // Re-throw the error so you can handle it at a higher level if needed
   }
 };
-
-export const updateUser = async (token, userData)=>{
-  try{
-const response = await axios.post(`${STRAPI_URL}/api/users/me`,userData,{
-  headers:{
-    Authorization: `Bearer ${token}`,
-  }
-})
-return response.data
-  }
-  catch(error){
-    console.error('Error updating user:', error);
-    throw error; // Re-throw the error for the calling code to handle.
-  }
-}

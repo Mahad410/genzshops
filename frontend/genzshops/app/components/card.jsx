@@ -4,8 +4,7 @@ import Link from 'next/link';
 import Favouritebtn from "@/app/components/favouritebtn";
 import { getDiscountedPricePercentage } from "@/utils/helper";
 import categories from './categories';
-export default function card({ productData: { attributes: productData, productId } }) {
-  console.log(productData)
+export default function card({ productData: { attributes: productData } }) {
   return (
     <>
       <div className="card w-full md:w-96 bg-base-100 shadow-xl">

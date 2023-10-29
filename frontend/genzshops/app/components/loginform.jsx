@@ -71,6 +71,7 @@ export default function LoginForm() {
       </label>
       <input
         type={type}
+        id={name}
         name={name}
         value={formData[name]}
         onChange={handleChange}

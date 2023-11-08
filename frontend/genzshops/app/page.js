@@ -46,7 +46,7 @@ export default function Home() {
         </section>
 
         <section className="h-screen relative w-full">
-          <Image src="/img/intro-img.webp" alt="GenZ Cart" layout="fill" objectFit="cover" className="filter grayscale" onLoadingComplete={handleImageLoad} />
+          <Image src="/img/intro-img.webp" alt="GenZ Cart" layout="fill" objectFit="cover" className="filter grayscale" onLoad={handleImageLoad} />
           <div className="m-[auto] w-screen absolute top-[50%] translate-y-[-50%]">
             <h1 className="w-[90%] md:w-[50%] m-[auto] text-center text-[4rem] md:text-[8rem] xl:text-[10rem] font-luckiest text-[#ffC400] outline-text leading-[2.5rem] md:leading-[5.5rem]">Dare to Stand Out?</h1>
             <p className="w-[90%] md:w-[60%] xl:w-[40%] m-[auto] text-center text-[1.5rem] font-extrabold outline-text-white mt-[2rem]">It&apos;s time to unleash your inner rebel ✨. Explore our latest products and express your identity in a whole new way.</p>

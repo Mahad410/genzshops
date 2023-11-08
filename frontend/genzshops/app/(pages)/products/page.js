@@ -2,7 +2,6 @@
 import React, { useEffect, useState, memo } from "react";
 import { fetchProducts } from "@/utils/helper";
 import Loading from "@/app/(pages)/products/loading";
-import { ProtectedRoutes } from "@/app/components/protectedRoutes";
 import Card from "@/app/components/card";
 import Categories from "@/app/components/categories";
 
@@ -27,17 +26,16 @@ export default function Products() {
   }, []);
 
   return (
-    <ProtectedRoutes>
+    <>
       {loading ? (
         <Loading />
       ) : (
         <section className="bg-[--bg-intro] min-h-screen">
           <Categories productData={products} />
-          <h1 className="font-extrabold text-[3rem] md:text-[6rem] text-[--bg-intro-text] sticky top-[20px] w-full pt-[40px] bg-[--bg-intro] z-10">
+          <h1 className="font-bold text-[2.5rem] md:text-[5rem] text-[--bg-intro-text] w-full pt-[30px]">
             Products
           </h1>
-
-          <div className="m-[auto] w-full pl-[0.5rem] pr-[0.5rem] md:pl-[1rem] md:pr-[1rem]">
+          <div className="m-[auto] w-full px-[0.5rem] md:px-[1rem]">
             <div className="grid grid-cols-1 gap-[1.5rem] md:grid-cols-2 xl:grid-cols-4 place-items-center">
               {products.map((product) => (
                 <MemoizedCard productData={product} key={product?.id}/>
@@ -46,6 +44,6 @@ export default function Products() {
           </div>
         </section>
       )}
-    </ProtectedRoutes>
+    </>
   );
 }

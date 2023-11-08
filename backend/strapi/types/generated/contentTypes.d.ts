@@ -695,9 +695,9 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
         minLength: 3;
       }>;
     image: Attribute.Media;
-    product: Attribute.Relation<
+    products: Attribute.Relation<
       'api::category.category',
-      'manyToOne',
+      'manyToMany',
       'api::product.product'
     >;
     createdAt: Attribute.DateTime;
@@ -778,16 +778,36 @@ export interface ApiProductProduct extends Schema.CollectionType {
     productImages: Attribute.Media & Attribute.Required;
     productSlug: Attribute.UID<'api::product.product', 'productTitle'> &
       Attribute.Required;
-    productDescription: Attribute.RichText & Attribute.Required;
+    productDescription: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 30;
+        maxLength: 300;
+      }>;
     productSize: Attribute.JSON;
     productThumbnail: Attribute.Media & Attribute.Required;
     productOrginalPrice: Attribute.Integer;
+    new: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
+    features: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    return: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    care: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
     productCategories: Attribute.Relation<
       'api::product.product',
-      'oneToMany',
+      'manyToMany',
       'api::category.category'
     >;
-    new: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

@@ -2,26 +2,25 @@ import { useEffect } from 'react';
 import { checkAuthentication } from '@/utils/helper';
 import { useAuth } from '@/utils/context';
 import Login from '@/app/(pages)/login/page';
-import { usePathname } from 'next/navigation';
+import { useRouter,usePathname } from 'next/navigation';
 
 export const ProtectedRoutes = ({ children }) => {
-  const { token } = useAuth();
+  const { localToken } = useAuth();
   const path = usePathname();
-  
   useEffect(() => {
     // Check authentication on the client side.
     if (typeof window !== 'undefined') {
-      const isAuthenticated = checkAuthentication(token);
+      const isAuthenticated = checkAuthentication(localToken);
       if (!isAuthenticated) {
         // Set redirectUrl in localStorage.
         localStorage.setItem('redirectUrl', path);
       }
     }
-  }, [token]);
+  }, [localToken]);
 
   return (
     <>
-      {token ? children : <Login />}
+      {localToken ? children : <Login />}
     </>
   );
 };

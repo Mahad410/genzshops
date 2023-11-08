@@ -31,7 +31,7 @@ export const fetchProducts = async (params = '') => {
   };
 
   try {
-    const response = await axios.get(`${STRAPI_URL}/api/products?populate=*&${params}`, config);
+    const response = await axios.get(`${STRAPI_URL}/api/products?${params}&populate=*`, config);
     const data = response.data;
     // Store the data in the cache
     cache.set(cacheKey, data);
@@ -89,7 +89,7 @@ export const registerUser = async (userData) => {
 };
 
 //login api
-export const loginUser = async (loginData, setToken) => {
+export const loginUser = async (loginData, setToken,token) => {
   try {
     const response = await axios.post('http://localhost:1337/api/auth/local', loginData);
     setToken(response.data.jwt);
@@ -100,7 +100,7 @@ export const loginUser = async (loginData, setToken) => {
       const validationErrors = error.response.data.error.message;
       return { error: validationErrors };
     } else {
-      return { error: error.response.data.error.message };
+      return { error: error?.response?.data?.error?.message };
     }
   }
 };

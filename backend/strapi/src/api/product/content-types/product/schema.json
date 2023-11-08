@@ -44,7 +44,9 @@
     },
     "productDescription": {
       "type": "richtext",
-      "required": true
+      "required": true,
+      "maxLength": 300,
+      "minLength": 30
     },
     "productSize": {
       "type": "json",
@@ -61,16 +63,31 @@
     "productOrginalPrice": {
       "type": "integer"
     },
-    "productCategories": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::category.category",
-      "mappedBy": "product"
-    },
     "new": {
       "type": "boolean",
       "default": false,
       "required": true
+    },
+    "features": {
+      "type": "richtext",
+      "required": true,
+      "maxLength": 300
+    },
+    "return": {
+      "type": "richtext",
+      "required": true,
+      "maxLength": 300
+    },
+    "care": {
+      "type": "richtext",
+      "required": true,
+      "maxLength": 300
+    },
+    "productCategories": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::category.category",
+      "inversedBy": "products"
     }
   }
 }

@@ -9,22 +9,23 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { checkAuthentication } from '@/utils/helper';
 import { useAuth } from '@/utils/context';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 export default function Navbar() {
-  const { token, setToken } = useAuth();
+  const { token, setToken, localToken } = useAuth();
 
   const router = useRouter();
   useEffect(() => {
-    const isAuthenticated = checkAuthentication(token);
+    const isAuthenticated = checkAuthentication(localToken);
     if (!isAuthenticated) {
       localStorage.setItem('redirectUrl', window.location.pathname);
     }
-  }, [token]);
+  }, [localToken]);
 
   const handleLogout = () => {
+    router.refresh();
     setToken(null);
-    window.location.reload();
+    localStorage.removeItem('token','redirectUrl');
   };
 
   return (
@@ -66,7 +67,7 @@ export default function Navbar() {
         </div>
         <div className="navbar-end">
           {
-            token ? (
+            localToken ? (
               <>
                 <label tabIndex={0} htmlFor='search'>
                   <input type='search' id='search' name='search' className='bg-[--bg-li] border-[4px] border-white hover:border-[--bg-li] rounded-full p-2 pl-[16px] pr-[16px]' placeholder="Search">
@@ -104,7 +105,7 @@ export default function Navbar() {
                         Profile
                       </Link>
                     </li>
-                    <li className='hover:bg-red-400 rounded-lg'><Link href={''} onClick={handleLogout}>Logout</Link></li>
+                    <li className='hover:bg-red-400 rounded-lg'><Link href={'/'} onClick={handleLogout}>Logout</Link></li>
                   </ul>
                 </div>
               </>

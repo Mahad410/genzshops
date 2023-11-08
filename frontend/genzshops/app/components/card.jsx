@@ -42,8 +42,8 @@ export default function card({ productData: { attributes: productData } }) {
         </div>
         <div className='join my-4 flex items-center justify-around'>
           <button type='button' className='btn btn-neutral w-1/3'>Add to Cart</button>
-          <Link href={`/${productData.productSlug}`} className='w-1/2'>
-            <button type='button' className='btn btn-neutral w-full'>
+          <Link href={`/${productData.productSlug}`} scroll={false} className='w-1/2'>
+            <button type='button' className='btn btn-neutral w-full' onClick={()=>{localStorage.setItem('redirectUrl',productData.productSlug)}}>
               View Product
             </button>
           </Link>

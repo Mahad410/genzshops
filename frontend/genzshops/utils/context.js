@@ -5,13 +5,15 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
+  const localToken = localStorage.getItem('token');
+  const [cartItems, setCartItems] = useState([]);
   
   const checkAuthentication = () => {
-    return !!token;
+    return !!localToken;
   };
   
   return (
-    <AuthContext.Provider value={{ token, setToken, checkAuthentication }}>
+    <AuthContext.Provider value={{ token, setToken, checkAuthentication, localToken,cartItems, setCartItems }}>
       {children}
     </AuthContext.Provider>
   );

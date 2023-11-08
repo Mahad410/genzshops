@@ -42,7 +42,7 @@ export default function LoginForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await loginUser(formData, setToken);
+        const response = await loginUser(formData, setToken, token);
         if (!response.error) {
           setSuccessMessage('Login successful!');
           setErrors({});

@@ -40,7 +40,7 @@ const Categories = () => {
 
   return (
     <>
-      <h1 className='font-extrabold text-[3rem] md:text-[6rem] text-[--bg-intro-text] w-full bg-[--bg-intro] z-10'>
+      <h1 className='font-bold text-[2.5rem] md:text-[5rem] text-[--bg-intro-text] w-full py-[30px]'>
         Categories
       </h1>
       <div className='categories max-h-max md:max-h-[75vh] w-full p-[40px] pt-[0] pb-[0] flex gap-[10px] flex-col sm:flex-row'>

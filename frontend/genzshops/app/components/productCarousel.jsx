@@ -1,23 +1,28 @@
-import React, { useRef, useState, useEffect } from 'react';
+'use client';
+import React,{useState} from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Image from 'next/image';
 import ArrowCircleLeftTwoToneIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
 import ArrowCircleRightTwoToneIcon from '@mui/icons-material/ArrowCircleRightTwoTone';
-import 'swiper/css';
+import 'swiper/css/bundle';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { Pagination, Navigation, Mousewheel, Keyboard } from 'swiper/modules';
+import { Pagination, Navigation, Mousewheel, Keyboard, } from 'swiper/modules';
 
 export default function ProductCarousel({ productData }) {
   const images = productData?.data[0]?.attributes?.productImages?.data;
-
   return (
-    <div className='w-[640px] h-[480px]'>
+    <div className='w-[592px] h-[592px]'>
         <Swiper
+          modules={[Pagination, Navigation, Mousewheel, Keyboard]}          
           direction={'horizontal'}
           slidesPerView={1}
           spaceBetween={30}
           mousewheel={true}
+          keyboard={{
+            enabled: true,
+            onlyInViewport: false,
+          }}
           pagination={{
             type: 'progressbar',
           }}
@@ -25,26 +30,25 @@ export default function ProductCarousel({ productData }) {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev',
           }}
-          modules={[Pagination, Navigation, Mousewheel, Keyboard]}
-          className='mySwiper w-[640px] h-[480px]'
+          className='mySwiper2 w-[592px] h-[592px]'
         >
           {images?.map((image, index) => {
             return (
-              <SwiperSlide key={index} className='w-[640px] h-[480px]'>
+              <SwiperSlide key={index} className='w-[592px] h-[592px]'>
                 <Image
                   src={image?.attributes?.url}
-                  alt={images?.attributes?.name}
-                  width={640}
-                  height={480}
+                  alt={image?.attributes?.name}
+                  width={592}
+                  height={592}
                 />
               </SwiperSlide>
             );
           })}
 
-          <div class='swiper-button-prev'>
+          <div className='swiper-button-prev'>
             <ArrowCircleLeftTwoToneIcon />
           </div>
-          <div class='swiper-button-next'>
+          <div className='swiper-button-next'>
             <ArrowCircleRightTwoToneIcon />
           </div>
         </Swiper>

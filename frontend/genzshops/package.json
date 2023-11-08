@@ -20,6 +20,7 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-markdown": "^9.0.0",
     "swiper": "^10.3.1"
   },
   "devDependencies": {

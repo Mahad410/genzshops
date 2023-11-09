@@ -1,10 +1,9 @@
 'use client'
-import { useState } from "react";
+import React,{ useState } from "react";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import LocalMallTwoToneIcon from '@mui/icons-material/LocalMallTwoTone';
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
-import React from "react";
 import {useAuth} from '@/utils/context'
 
 export default function Productactionbuttons({ data }) {
@@ -57,8 +56,7 @@ export default function Productactionbuttons({ data }) {
     };
     return (
         <>
-        {console.log(data)}
-        {console.log('cartItems',cartItems)}
+        {console.log(cartItems)}
             <div className="my-3">
                 <h3 className="my-2 text-[1.5rem] font-bold">Select a Size:</h3>
                 <div className="flex items-center justify-around w-full border-black border-[4px] h-[72px] rounded-lg p-1">

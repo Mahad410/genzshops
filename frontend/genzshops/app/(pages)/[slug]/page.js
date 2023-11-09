@@ -21,20 +21,20 @@ export default function Product(props) {
     const [similarProducts, setSimilarProducts] = useState([]);
     const localtoken = localStorage.getItem('token');
     useEffect(() => {
-            const fetchProduct = async () => {
-                try {
-                    const productData = await fetchProducts(`filters[productSlug][$eqi]=${props.params.slug}`);
-                    setProduct(productData);
-                    const similarData = await fetchProducts(`filters[productTitle][$nei]=${props.params.slug}&pagination[page]=1&pagination[pageSize]=4&sort[0]=productTitle:desc`);
-                    setSimilarProducts(similarData.data)
-                } catch (error) {
-                    console.error('An error occurred while fetching the product:', error);
-                }
-            };
-            if(product===null){
-                fetchProduct();
+        const fetchProduct = async () => {
+            try {
+                const productData = await fetchProducts(`filters[productSlug][$eqi]=${props.params.slug}`);
+                setProduct(productData);
+                const similarData = await fetchProducts(`filters[productTitle][$nei]=${props.params.slug}&pagination[page]=1&pagination[pageSize]=4&sort[0]=productTitle:desc`);
+                setSimilarProducts(similarData.data)
+            } catch (error) {
+                console.error('An error occurred while fetching the product:', error);
             }
-    }, [props.params.slug,localtoken,product]);
+        };
+        if (product === null) {
+            fetchProduct();
+        }
+    }, [props.params.slug, localtoken, product]);
     return (
         <ProtectedRoutes>
             <div className={'w-auto min-h-min'}>

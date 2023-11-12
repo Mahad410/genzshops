@@ -1,5 +1,5 @@
 'use client'
-import { React, memo, useState, useEffect } from 'react';
+import {React, memo, useState, useEffect } from 'react';
 import ProductCarousel from "@/app/components/productCarousel";
 import ProductActionButtons from "@/app/components/productactionbuttons";
 import { fetchProducts } from '@/utils/helper';

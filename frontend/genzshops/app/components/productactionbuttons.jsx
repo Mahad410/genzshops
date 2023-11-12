@@ -1,4 +1,3 @@
-'use client'
 import React, { useState, useMemo } from "react";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
@@ -11,9 +10,10 @@ export default function Productactionbuttons({ data }) {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const { cartItems, setCartItems } = useAuth();
-  const sizes = data?.attributes?.productSize?.sizes;
+  const sizes = useMemo(() => data?.attributes?.productSize?.sizes, [data]);
   const [stock, setStock] = useState(data?.attributes?.productQuantity);
   const [disable, setDisable] = useState(stock <= 0);
+  const [newItem, setNewItem] = useState(null);
 
   const handleSizeChange = (size) => {
     setSelectedSize(size);
@@ -21,8 +21,12 @@ export default function Productactionbuttons({ data }) {
 
   const handleAddToCart = () => {
     if (selectedSize) {
-      const newItem = useMemo(() => {
-        return {
+      const existingItemIndex = cartItems.findIndex((item) => item.id === data?.id && item.size === selectedSize);
+      const updatedCartItems = [...cartItems];
+      if (existingItemIndex !== -1) {
+        updatedCartItems[existingItemIndex].quantity += quantity;
+      } else {
+        const newItem = {
           id: data?.id,
           name: data?.attributes?.productTitle,
           size: selectedSize,
@@ -30,17 +34,12 @@ export default function Productactionbuttons({ data }) {
           quantity: quantity,
           thumbnail: data?.attributes?.productThumbnail?.data?.attributes?.url,
         };
-      }, [data, selectedSize, quantity]);
-      const existingItemIndex = cartItems.findIndex((item) => item.id === newItem.id && item.size === newItem.size);
-      if (existingItemIndex !== -1) {
-        const updatedCartItems = [...cartItems];
-        updatedCartItems[existingItemIndex].quantity += quantity;
-        setCartItems(updatedCartItems);
-      } else {
-        setCartItems([...cartItems, newItem]);
+        updatedCartItems.push(newItem);
       }
+      setCartItems(updatedCartItems);
       setSelectedSize('');
       setQuantity(1);
+      setNewItem(null);
     }
   };
 
@@ -58,6 +57,17 @@ export default function Productactionbuttons({ data }) {
     setIsFavorite(!isFavorite);
   };
 
+  const handleNewItem = useMemo(() => {
+    return {
+      id: data?.id,
+      name: data?.attributes?.productTitle,
+      size: selectedSize,
+      price: data?.attributes?.productPrice,
+      quantity: quantity,
+      thumbnail: data?.attributes?.productThumbnail?.data?.attributes?.url,
+    };
+  }, [data, selectedSize, quantity]);
+
   return (
     <>
       <div className="my-3">
@@ -72,10 +82,10 @@ export default function Productactionbuttons({ data }) {
                 value={item.size}
                 checked={selectedSize === item.size}
                 onChange={() => handleSizeChange(item.size)}
-                disabled={!item.enabled}
+                disabled={disable || !item.enabled}
                 className="hidden"
               />
-              <label htmlFor={item.size} className={`border-[4px] rounded-lg flex items-center justify-center w-[50px] h-[50px] uppercase ${selectedSize === item.size ? 'bg-black text-white hover:bg-black' : 'bg-white text-black hover:bg-slate-300'} ${!item.enabled ? 'cursor-not-allowed hover:bg-white opacity-50 bg-[white]' : 'cursor-pointer'}`}>{item.size}</label>
+              <label htmlFor={item.size} className={`border-[4px] rounded-lg flex items-center justify-center w-[50px] h-[50px] uppercase ${selectedSize === item.size ? 'bg-black text-white hover:bg-black' : 'bg-white text-black hover:bg-slate-300'} ${!item.enabled || disable ? 'cursor-not-allowed hover:bg-white opacity-50 bg-[white]' : 'cursor-pointer'}`}>{item.size}</label>
             </div>
           ))}
         </div>
@@ -85,14 +95,14 @@ export default function Productactionbuttons({ data }) {
         <div
           className={`flex flex-row items-center justify-evenly w-full bg-[--bg-intro-text] p-[8px] rounded-lg h-min ${disable ? 'cursor-not-allowed' : 'cursor-pointer'}`}
         >
-          <button className={`hover:bg-[--bg-intro] rounded-lg p-[8px] icon-btn disabled:opacity-50 disabled:cursor-not-allowed`} disabled={disable} onClick={handleDecrementQuantity}>
-            <RemoveCircleOutlineRoundedIcon className={'text-[--bg-intro] icon w-[40px] h-[40px]'} />
+          <button className={`hover:bg-[--bg-intro] disabled:hover:bg-[--bg-intro-text] rounded-lg p-[8px] icon-btn disabled:cursor-not-allowed`} disabled={disable} onClick={handleDecrementQuantity}>
+            <RemoveCircleOutlineRoundedIcon className={`${disable ? 'text-[grey] hover:text-[grey]' : 'icon text-[--bg-intro]'} w-[40px] h-[40px] `} />
           </button>
           <p className={`text-[--bg-intro] font-bold text-[1.5rem] pl-[8px] pr-[8px] ${disable ? 'text-[grey]' : ''}`}>
             {quantity}
           </p>
-          <button className={'hover:bg-[--bg-intro] rounded-lg p-[8px]  icon-btn disabled:opacity-50 disabled:cursor-not-allowed'} disabled={disable} onClick={handleIncrementQuantity}>
-            <AddCircleOutlineRoundedIcon className={'text-[--bg-intro] icon w-[40px] h-[40px]'} />
+          <button className={'hover:bg-[--bg-intro] disabled:hover:bg-[--bg-intro-text]  rounded-lg p-[8px] icon-btn disabled:cursor-not-allowed'} disabled={disable} onClick={handleIncrementQuantity}>
+            <AddCircleOutlineRoundedIcon className={`${disable ? 'text-[grey] hover:text-[grey]' : 'icon text-[--bg-intro]'} w-[40px] h-[40px] `} />
           </button>
         </div>
         <div className="tooltip tooltip-right" data-tip={isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}>
@@ -107,7 +117,7 @@ export default function Productactionbuttons({ data }) {
       <div className="flex items-center justify-between">
         <div className={'my-3 p-1 rounded-lg bg-[--bg-intro-text] w-[40%]'}>
           <button
-            type={'button'} className={`bg-[--bg-intro-text] hover:bg-[--bg-intro] text-[--bg-intro] hover:text-[--bg-intro-text] font-bold rounded-lg h-min p-[12px] flex justify-center items-center btn-product w-full disabled:opacity-50 disabled:cursor-not-allowed`} disabled={disable} onClick={handleAddToCart}>
+            type={'button'} className={`bg-[--bg-intro-text] hover:bg-[--bg-intro] disabled:hover:bg-[--bg-intro-text] text-[--bg-intro] hover:text-[--bg-intro-text] disabled:hover:text-[--bg-intro] font-bold rounded-lg h-min p-[12px] flex justify-center items-center btn-product w-full disabled:opacity-50 disabled:cursor-not-allowed`} disabled={disable} onClick={handleAddToCart}>
             <p className={'text-[1.5rem] font-bold'}>
               Add to Cart
             </p>
@@ -116,7 +126,7 @@ export default function Productactionbuttons({ data }) {
         </div>
 
         <div className={'my-3 p-1 rounded-lg bg-[--bg-intro-text] w-[58.5%]'}>
-          <button type={'button'} className={`bg-[--bg-intro-text] hover:bg-[--bg-intro] text-[--bg-intro] hover:text-[--bg-intro-text] font-bold rounded-lg h-min p-[12px] flex justify-center items-center btn-product w-full disabled:opacity-50 disabled:cursor-not-allowed`} disabled={disable}>
+          <button type={'button'} className={`bg-[--bg-intro-text] hover:bg-[--bg-intro] disabled:hover:bg-[--bg-intro-text] text-[--bg-intro] hover:text-[--bg-intro-text] disabled:hover:text-[--bg-intro] font-bold rounded-lg h-min p-[12px] flex justify-center items-center btn-product w-full disabled:opacity-50 disabled:cursor-not-allowed`} disabled={disable}>
             <p className={'text-[1.5rem] font-bold'}>
               Buy Now
             </p>

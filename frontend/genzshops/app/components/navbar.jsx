@@ -1,5 +1,5 @@
-// import icons
-"use client"
+'use client'
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
 import Inventory2RoundedIcon from '@mui/icons-material/Inventory2Rounded';
 import ConnectWithoutContactRoundedIcon from '@mui/icons-material/ConnectWithoutContactRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
@@ -8,25 +8,30 @@ import Link from 'next/link';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { checkAuthentication } from '@/utils/helper';
 import { useAuth } from '@/utils/context';
-import { useEffect } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
+
 export default function Navbar() {
   const { token, setToken, localToken } = useAuth();
-
   const router = useRouter();
+
   useEffect(() => {
     const isAuthenticated = checkAuthentication(localToken);
     if (!isAuthenticated) {
       localStorage.setItem('redirectUrl', window.location.pathname);
     }
-  }, [localToken]);
+  }, [localToken, token]);
 
   const handleLogout = () => {
-    router.refresh();
     setToken(null);
-    localStorage.removeItem('token','redirectUrl');
+    localStorage.removeItem('token');
+    localStorage.removeItem('redirectUrl');
+    router.refresh();
   };
+
+  if (typeof localToken === 'undefined') {
+    return null;
+  }
 
   return (
     <>
@@ -110,12 +115,6 @@ export default function Navbar() {
               </div>
             )
           }
-
-
-
-
-
-
         </div>
       </div>
     </>

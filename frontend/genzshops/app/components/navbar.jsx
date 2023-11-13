@@ -20,7 +20,7 @@ export default function Navbar() {
     if (!isAuthenticated) {
       localStorage.setItem('redirectUrl', window.location.pathname);
     }
-  }, [localToken, token]);
+  }, [localToken, token, router.refresh]);
 
   const handleLogout = () => {
     setToken(null);

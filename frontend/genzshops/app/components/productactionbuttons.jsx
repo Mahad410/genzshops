@@ -14,10 +14,12 @@ export default function Productactionbuttons({ data }) {
   const [stock, setStock] = useState(data?.attributes?.productQuantity);
   const [disable, setDisable] = useState(stock <= 0);
   const [newItem, setNewItem] = useState(null);
-
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showSizeMessage, setShowSizeMessage] = useState(false);
   const handleSizeChange = (size) => {
     setSelectedSize(size);
   };
+  
 
   const handleAddToCart = () => {
     if (selectedSize) {
@@ -40,6 +42,11 @@ export default function Productactionbuttons({ data }) {
       setSelectedSize('');
       setQuantity(1);
       setNewItem(null);
+      setShowSuccessMessage(true);
+      setShowSizeMessage(false);
+    }
+    else{
+     setShowSizeMessage(true);
     }
   };
 
@@ -57,19 +64,28 @@ export default function Productactionbuttons({ data }) {
     setIsFavorite(!isFavorite);
   };
 
-  const handleNewItem = useMemo(() => {
-    return {
-      id: data?.id,
-      name: data?.attributes?.productTitle,
-      size: selectedSize,
-      price: data?.attributes?.productPrice,
-      quantity: quantity,
-      thumbnail: data?.attributes?.productThumbnail?.data?.attributes?.url,
-    };
-  }, [data, selectedSize, quantity]);
-
+  const handleHideMessage = () => {
+    clearTimeout(timer);
+    setShowSuccessMessage(false);
+  };
+  
+  const timer = setTimeout(handleHideMessage, 4000);
   return (
     <>
+        {
+        showSizeMessage &&  <div className="alert alert-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        <span>Please select a size!</span>
+        </div>
+         }
+        {
+        showSuccessMessage &&  <div className="alert alert-success">
+          <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Your purchase has been added to cart!</span>
+        </div>
+         }
       <div className="my-3">
         <h3 className="my-2 text-[1.5rem] font-bold">Select a Size:</h3>
         <div className="flex items-center justify-around w-full border-black border-[4px] h-[72px] rounded-lg p-1">

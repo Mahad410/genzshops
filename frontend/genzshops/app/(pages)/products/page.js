@@ -15,7 +15,7 @@ export default function Products() {
 
   useEffect(() => {
     async function fetchData() {
-      const productsData = await fetchProducts();
+      const productsData = await fetchProducts('populate=*');
       setProducts(productsData.data);
       setLoading(false);
     }
@@ -27,6 +27,7 @@ export default function Products() {
 
   return (
     <>
+    {console.log(products)}
       {loading ? (
         <Loading />
       ) : (

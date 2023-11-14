@@ -32,10 +32,7 @@ export default function cart() {
 
                     {cartItems.length > 0 ? (
                         <>
-                            <p className="font-bold text-[2rem] md:text-[3rem] text-[--bg-intro-text] w-full">
-                                Products
-                            </p>
-                            <div className="w-full">
+                            <div className="w-full h-min relative">
                                 <div className="flex items-center justify-between border-2 p-4 mb-2">
                                     <div className="w-11 mx-4">
                                         <p className="text-lg font-bold text-center">{`No`}</p>
@@ -89,7 +86,9 @@ export default function cart() {
                                         </div>
                                     </div>
                                 ))}
-                                <div className="flex items-center justify-between border-2 p-4 mb-2">
+                            </div>
+                            <div className="fixed bottom-10 w-[91.5%] h-min bg-[white]">
+                            <div className="flex items-center justify-between border-2 p-4 mb-2">
                                     <div className="w-max mx-4">
                                         <p className="text-lg font-bold">{`Sub Total`}</p>
                                     </div>
@@ -97,8 +96,6 @@ export default function cart() {
                                         <p className="text-lg font-bold">{subtotal}</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="absolute bottom-10 w-[90%]">
                                 <div className="join w-full flex items-center justify-around mt-5 m-1">
                                     <Link href="/products" className="w-[65%]">
                                         <button

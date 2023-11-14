@@ -13,7 +13,7 @@ const IntroSingleButton = memo(({ category }) => (
       height={300}
     />
     <div className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>
-      <Link href=''>
+      <Link href={`/category/${category?.attributes?.name}`}>
         <button
           type='button'
           className='btn bg-[#ffffff] hover:bg-[--bg-li] border-[4px] border-[#000000] hover:border-[#ffffff]  font-bold text-[#000000] hover:text-[--sidebar-text] mt-[30px] h-min'

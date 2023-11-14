@@ -23,9 +23,9 @@ export default function Product(props) {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const productData = await fetchProducts(`filters[productSlug][$eqi]=${props.params.slug}`);
+                const productData = await fetchProducts(`filters[productSlug][$eqi]=${props.params.slug}&populate=*`);
                 setProduct(productData);
-                const similarData = await fetchProducts(`filters[productTitle][$nei]=${props.params.slug}&pagination[page]=1&pagination[pageSize]=4&sort[0]=productTitle:desc`);
+                const similarData = await fetchProducts(`filters[productTitle][$nei]=${props.params.slug}&pagination[page]=1&pagination[pageSize]=4&sort[0]=productTitle:desc&populate=*`);
                 setSimilarProducts(similarData.data)
             } catch (error) {
                 console.error('An error occurred while fetching the product:', error);

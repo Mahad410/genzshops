@@ -31,7 +31,7 @@ export const fetchProducts = async (params = '') => {
   };
 
   try {
-    const response = await axios.get(`${STRAPI_URL}/api/products?${params}&populate=*`, config);
+    const response = await axios.get(`${STRAPI_URL}/api/products?${params}`, config);
     const data = response.data;
     // Store the data in the cache
     cache.set(cacheKey, data);

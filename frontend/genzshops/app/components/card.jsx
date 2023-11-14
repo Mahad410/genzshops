@@ -1,10 +1,14 @@
-import React from 'react'
+'use client'
+import React,{useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link';
-import Favouritebtn from "@/app/components/favouritebtn";
+import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import { getDiscountedPricePercentage } from "@/utils/helper";
-import categories from './categories';
 export default function card({ productData: { attributes: productData } }) {
+  const [isFavorite, setIsFavorite] = useState(false);
+  const handleToggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
   return (
     <>
       <div className="card w-full md:w-96 bg-base-100 shadow-xl">
@@ -41,12 +45,18 @@ export default function card({ productData: { attributes: productData } }) {
           </div>
         </div>
         <div className='join my-4 flex items-center justify-around'>
-          <button type='button' className='btn btn-neutral w-1/3'>Add to Cart</button>
-          <Link href={`/${productData.productSlug}`} scroll={false} className='w-1/2'>
+          
+           <Link href={`/product/${productData?.productSlug}`} scroll={false} className='w-[80%]'>
             <button type='button' className='btn btn-neutral w-full' onClick={()=>{localStorage.setItem('redirectUrl',productData.productSlug)}}>
               View Product
             </button>
           </Link>
+          <div className="flex flex-row items-center justify-evenly w-min p-[4px] rounded-lg h-min btn btn-neutral">
+            <button className={`${!isFavorite ? 'hover:bg-[#ec5353]' : 'hover:bg-[--bg-intro]'} rounded-lg p-[8px] icon-btn`} onClick={handleToggleFavorite}>
+              <FavoriteTwoToneIcon className={`icon w-[20px] h-[20px] ${isFavorite ? 'text-[#ec5353]' : 'text-[--bg-intro]'}`} />
+            </button>
+          </div>
+         
         </div>
       </div>
     </>

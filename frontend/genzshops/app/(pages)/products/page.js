@@ -27,7 +27,6 @@ export default function Products() {
 
   return (
     <>
-    {console.log(products)}
       {loading ? (
         <Loading />
       ) : (

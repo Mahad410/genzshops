@@ -10,13 +10,12 @@ import { useRouter } from 'next/navigation';
 export default function Profile() {
   const router = useRouter();
   const inputRef = useRef(null);
-  const { token } = useAuth();
+  const {token } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
   });
   const [updateData, setUpdateData] = useState(formData.username); // Initialize with username
-  const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
@@ -25,11 +24,9 @@ export default function Profile() {
         const user = await getUser(token);
         setFormData({ username: user.username, email: user.email });
         setUpdateData(user.username); // Set initial value of updateData
-        setLoading(false);
       } catch (error) {
         console.error('An error occurred while fetching user profile:', error);
         setErrorMessage('Failed to fetch user profile');
-        setLoading(false);
       }
     })();
   }, [token]);
@@ -55,9 +52,7 @@ export default function Profile() {
     const updatedFormData = { ...formData, username: updateData };
 
     try {
-      const { updateUser } = await import('@/utils/helper');
-      const response = await updateUser(token,updatedFormData);
-
+      const response = await updateUser(updatedFormData);
       if (response.status === 200) {
         alert('Profile updated successfully');
         // Update formData with the new username
@@ -70,14 +65,11 @@ export default function Profile() {
     }
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <ProtectedRoutes>
-      <h1 className='text-[4rem] text-center m-2 font-bold'>Profile</h1>
-      <form onSubmit={handleSubmit} className="min-h-min w-[600px] p-[24px] border-[4px] m-[auto]">
+      <div className="relative w-full h-[calc(100vh-180px)] overflow-hidden">
+      <form onSubmit={handleSubmit} className="h-min w-[600px] p-[24px] border-[4px] bg-white rounded-xl absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+      <h1 className="text-5xl font-bold text-center mb-4">Profile</h1>
         <div className='mb-2'>
           <label htmlFor="username" className='block'>Username</label>
           <span className='flex items-center justify-between'>
@@ -110,11 +102,24 @@ export default function Profile() {
             </button>
           </span>
         </div>
-        <div className='flex items-center'>
-          <button className="btn bg-red-500 hover:bg-red-400 border-[4px] border-[#000000] hover-border-[#ffffff] rounded-full font-bold text-[#ffffff] mt-[30px] h-min mr-1" onClick={handleCancel}>Cancel</button>
-          <button className="btn bg-[#ffffff] hover.bg-[--bg-li] border-[4px] border-[#000000] hover-border-[#ffffff] rounded-full font-bold text-[#000000] hover-text-[--sidebar-text] mt-[30px] h-min" type="submit" onClick={handleSubmit}>Save Changes</button>
+        <div className="join w-full flex items-center justify-around mt-5 m-1">
+          <button
+            type="button"
+            className='btn w-1/3'
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className='btn btn-active btn-neutral w-1/2'
+            onClick={handleSubmit}
+          >
+            Save
+          </button>
         </div>
       </form>
+      </div>
     </ProtectedRoutes>
   );
 }

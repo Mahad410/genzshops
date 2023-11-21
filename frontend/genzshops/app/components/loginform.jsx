@@ -4,17 +4,17 @@ import { loginUser } from '@/utils/helper';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/utils/context';
 import Link from 'next/link';
+import secureLocalStorage from 'react-secure-storage';
 
 export default function LoginForm() {
   const path = usePathname();
-  const { token, setToken } = useAuth();
+  const { token, setToken,setRole } = useAuth();
   const router = useRouter();
 
   const [formData, setFormData] = useState({
     identifier: '',
     password: '',
   });
-  const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [formError, setFormError] = useState('');
 
@@ -23,44 +23,40 @@ export default function LoginForm() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.identifier) {
-      newErrors.identifier = 'Username or email is required';
-    }
-
-    if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters long';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      try {
-        const response = await loginUser(formData, setToken, token);
-        if (!response.error) {
-          setSuccessMessage('Login successful!');
-          setErrors({});
-          setFormError('');
-          const redirectUrl = localStorage.getItem('redirectUrl') || '/';
-          router.push(redirectUrl === '/login' ? '/' : redirectUrl);
-        } else {
-          setFormError('Username or Password is incorrect');
+    try {
+      const response = await loginUser(formData, setToken, setRole);
+      if (!response.error) {
+        setSuccessMessage('Login successful!');
+        setFormError('');
+        const redirectUrl = secureLocalStorage.getItem('redirectUrl') || '/';
+        router.push(redirectUrl === '/login' ? '/' : redirectUrl);
+      } else {
+        if (formData.password.length < 6) {
+          setFormError('Password must be at least 6 characters long');
         }
-      } catch (error) {
-        console.error(error);
+        else if (response.error === 'identifier is a required field') {
+          setFormError('Username or email is required');
+        }
+        else if (response.error === '2 errors occurred') {
+          setFormError('Email and Password is required')
+        }
+        else if (response.error === 'Invalid identifier or password') {
+          setFormError('Invalid username or password');
+        }
+        else {
+          setFormError(response.error);
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   const handleCancel = async (e) => {
     e.preventDefault();
-    localStorage.removeItem('redirectUrl');
+    secureLocalStorage.removeItem('redirectUrl');
     router.push('/');
   };
 
@@ -75,14 +71,10 @@ export default function LoginForm() {
         name={name}
         value={formData[name]}
         onChange={handleChange}
+        onBlur={(() => setFormError(''))}
+        onKeyDown={(() => setFormError(''))}
         className="input input-bordered w-full m-1"
       />
-      
-      {
-        <div className={`text-red-600 ${errors[name] ? 'visible' : 'invisible'}`}>
-          {errors[name]} &nbsp;
-        </div>
-      }
     </div>
   );
 

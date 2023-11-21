@@ -362,6 +362,170 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
+export interface ApiCategoryCategory extends Schema.CollectionType {
+  collectionName: 'categories';
+  info: {
+    singularName: 'category';
+    pluralName: 'categories';
+    displayName: 'Category';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 3;
+      }>;
+    image: Attribute.Media;
+    products: Attribute.Relation<
+      'api::category.category',
+      'manyToMany',
+      'api::product.product'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiOrderOrder extends Schema.CollectionType {
+  collectionName: 'orders';
+  info: {
+    singularName: 'order';
+    pluralName: 'orders';
+    displayName: 'order';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    status: Attribute.Enumeration<['paid', 'unpaid']>;
+    total: Attribute.Integer;
+    totalItems: Attribute.Integer;
+    user: Attribute.Relation<
+      'api::order.order',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    checkout_session: Attribute.String;
+    products: Attribute.JSON;
+    token: Attribute.String;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiProductProduct extends Schema.CollectionType {
+  collectionName: 'products';
+  info: {
+    singularName: 'product';
+    pluralName: 'products';
+    displayName: 'product';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    productTitle: Attribute.String &
+      Attribute.Required &
+      Attribute.Unique &
+      Attribute.SetMinMaxLength<{
+        minLength: 3;
+        maxLength: 20;
+      }> &
+      Attribute.DefaultTo<'abcdefasdasdasdadasdasdasd'>;
+    productPrice: Attribute.Integer & Attribute.Required;
+    productQuantity: Attribute.Integer &
+      Attribute.Required &
+      Attribute.SetMinMax<{
+        min: 0;
+      }>;
+    productImages: Attribute.Media & Attribute.Required;
+    productSlug: Attribute.UID<'api::product.product', 'productTitle'> &
+      Attribute.Required;
+    productDescription: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 30;
+        maxLength: 300;
+      }>;
+    productSize: Attribute.JSON;
+    productThumbnail: Attribute.Media & Attribute.Required;
+    productOrginalPrice: Attribute.Integer;
+    new: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
+    features: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    return: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    care: Attribute.RichText &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        maxLength: 300;
+      }>;
+    productCategories: Attribute.Relation<
+      'api::product.product',
+      'manyToMany',
+      'api::category.category'
+    >;
+    users: Attribute.Relation<
+      'api::product.product',
+      'manyToMany',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product.product',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -631,7 +795,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
   options: {
     draftAndPublish: false;
-    timestamps: true;
   };
   attributes: {
     username: Attribute.String &
@@ -660,165 +823,26 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiCategoryCategory extends Schema.CollectionType {
-  collectionName: 'categories';
-  info: {
-    singularName: 'category';
-    pluralName: 'categories';
-    displayName: 'Category';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String &
-      Attribute.Required &
-      Attribute.SetMinMaxLength<{
-        minLength: 3;
-      }>;
-    image: Attribute.Media;
     products: Attribute.Relation<
-      'api::category.category',
+      'plugin::users-permissions.user',
       'manyToMany',
       'api::product.product'
     >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::category.category',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiOrderOrder extends Schema.CollectionType {
-  collectionName: 'orders';
-  info: {
-    singularName: 'order';
-    pluralName: 'orders';
-    displayName: 'order';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    stripeId: Attribute.String & Attribute.Required;
-    userProducts: Attribute.JSON & Attribute.Required;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::order.order',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::order.order',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiProductProduct extends Schema.CollectionType {
-  collectionName: 'products';
-  info: {
-    singularName: 'product';
-    pluralName: 'products';
-    displayName: 'product';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    productTitle: Attribute.String &
-      Attribute.Required &
-      Attribute.Unique &
-      Attribute.SetMinMaxLength<{
-        minLength: 3;
-        maxLength: 20;
-      }> &
-      Attribute.DefaultTo<'abcdefasdasdasdadasdasdasd'>;
-    productPrice: Attribute.Integer & Attribute.Required;
-    productQuantity: Attribute.Integer &
-      Attribute.Required &
-      Attribute.SetMinMax<{
-        min: 0;
-      }>;
-    productImages: Attribute.Media & Attribute.Required;
-    productSlug: Attribute.UID<'api::product.product', 'productTitle'> &
-      Attribute.Required;
-    productDescription: Attribute.RichText &
-      Attribute.Required &
-      Attribute.SetMinMaxLength<{
-        minLength: 30;
-        maxLength: 300;
-      }>;
-    productSize: Attribute.JSON;
-    productThumbnail: Attribute.Media & Attribute.Required;
-    productOrginalPrice: Attribute.Integer;
-    new: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
-    features: Attribute.RichText &
-      Attribute.Required &
-      Attribute.SetMinMaxLength<{
-        maxLength: 300;
-      }>;
-    return: Attribute.RichText &
-      Attribute.Required &
-      Attribute.SetMinMaxLength<{
-        maxLength: 300;
-      }>;
-    care: Attribute.RichText &
-      Attribute.Required &
-      Attribute.SetMinMaxLength<{
-        maxLength: 300;
-      }>;
-    productCategories: Attribute.Relation<
-      'api::product.product',
-      'manyToMany',
-      'api::category.category'
+    orders: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::order.order'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
-      'api::product.product',
+      'plugin::users-permissions.user',
       'oneToOne',
       'admin::user'
     > &
       Attribute.Private;
     updatedBy: Attribute.Relation<
-      'api::product.product',
+      'plugin::users-permissions.user',
       'oneToOne',
       'admin::user'
     > &
@@ -836,15 +860,15 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
+      'api::category.category': ApiCategoryCategory;
+      'api::order.order': ApiOrderOrder;
+      'api::product.product': ApiProductProduct;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::category.category': ApiCategoryCategory;
-      'api::order.order': ApiOrderOrder;
-      'api::product.product': ApiProductProduct;
     }
   }
 }

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link';
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import { getDiscountedPricePercentage } from "@/utils/helper";
+import secureLocalStorage from 'react-secure-storage';
 export default function card({ productData: { attributes: productData } }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const handleToggleFavorite = () => {
@@ -47,7 +48,7 @@ export default function card({ productData: { attributes: productData } }) {
         <div className='join my-4 flex items-center justify-around'>
           
            <Link href={`/product/${productData?.productSlug}`} scroll={false} className='w-[80%]'>
-            <button type='button' className='btn btn-neutral w-full' onClick={()=>{localStorage.setItem('redirectUrl',productData.productSlug)}}>
+            <button type='button' className='btn btn-neutral w-full' onClick={()=>{secureLocalStorage.setItem('redirectUrl',productData.productSlug)}}>
               View Product
             </button>
           </Link>

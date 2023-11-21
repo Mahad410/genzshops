@@ -9,8 +9,8 @@ import CheckCircleOutlineTwoToneIcon from '@mui/icons-material/CheckCircleOutlin
 import RemoveCircleOutlineTwoToneIcon from '@mui/icons-material/RemoveCircleOutlineTwoTone';
 import ReactMarkdown from 'react-markdown';
 import Card from '@/app/components/card';
-
-
+import secureLocalStorage from 'react-secure-storage';
+import { useAuth } from '@/utils/context';
 const MemoizedCard = memo(({ productData }) => (
     <Card productData={productData} key={productData?.id} />
 ));
@@ -19,7 +19,8 @@ export default function Product(props) {
     const [product, setProduct] = useState(null);
     // const categories = product?.data[0]?.attributes?.productCategories?.data?.map((cat) => cat?.attributes?.name);
     const [similarProducts, setSimilarProducts] = useState([]);
-    const localtoken = localStorage.getItem('token');
+    // const localtoken = secureLocalStorage.getItem('token');
+    const {token} = useAuth();
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -34,7 +35,7 @@ export default function Product(props) {
         if (product === null) {
             fetchProduct();
         }
-    }, [props.params.slug, localtoken, product]);
+    }, [props.params.slug, token, product]);
     return (
         <ProtectedRoutes>
             <div className={'w-auto min-h-min'}>

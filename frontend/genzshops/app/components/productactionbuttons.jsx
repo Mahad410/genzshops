@@ -1,9 +1,11 @@
+'use client'
 import React, { useState, useMemo } from "react";
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import LocalMallTwoToneIcon from '@mui/icons-material/LocalMallTwoTone';
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import { useAuth } from '@/utils/context'
+import secureLocalStorage from "react-secure-storage";
 
 export default function Productactionbuttons({ data }) {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -44,9 +46,9 @@ export default function Productactionbuttons({ data }) {
       setNewItem(null);
       setShowSuccessMessage(true);
       setShowSizeMessage(false);
-    }
-    else{
-     setShowSizeMessage(true);
+      secureLocalStorage.setItem('cartItems', JSON.stringify(updatedCartItems)); // Store updated cartItems in localStorage
+    } else {
+      setShowSizeMessage(true);
     }
   };
 
@@ -69,7 +71,7 @@ export default function Productactionbuttons({ data }) {
     setShowSuccessMessage(false);
   };
   
-  const timer = setTimeout(handleHideMessage, 4000);
+  const timer = setTimeout(handleHideMessage, 5000);
   return (
     <>
         {

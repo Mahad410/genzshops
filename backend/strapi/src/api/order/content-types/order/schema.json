@@ -4,20 +4,41 @@
   "info": {
     "singularName": "order",
     "pluralName": "orders",
-    "displayName": "order"
+    "displayName": "order",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "stripeId": {
-      "type": "string",
-      "required": true
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "paid",
+        "unpaid"
+      ]
     },
-    "userProducts": {
-      "type": "json",
-      "required": true
+    "total": {
+      "type": "integer"
+    },
+    "totalItems": {
+      "type": "integer"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "orders"
+    },
+    "checkout_session": {
+      "type": "string"
+    },
+    "products": {
+      "type": "json"
+    },
+    "token": {
+      "type": "string"
     }
   }
 }

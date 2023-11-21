@@ -88,6 +88,12 @@
       "relation": "manyToMany",
       "target": "api::category.category",
       "inversedBy": "products"
+    },
+    "users": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "products"
     }
   }
 }

@@ -1,6 +1,7 @@
 import { STRAPI_TOKEN, STRAPI_URL } from '@/utils/url';
 import axios from 'axios';
 import {LRUCache} from 'lru-cache';
+import secureLocalStorage from 'react-secure-storage';
 // discount logic
 const cache = new LRUCache({ max: 500, maxAge: 1000 * 60 * 60 }); // Cache up to 500 items for 1 hour
 
@@ -75,7 +76,7 @@ export const fetchCategories = async (params = '') => {
 
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post('http://localhost:1337/api/auth/local/register', userData);
+    const response = await axios.post(`${STRAPI_URL}/api/auth/local/register`, userData);
     const { user, jwt } = response.data;
     return response.data;
   } catch (error) {
@@ -89,11 +90,20 @@ export const registerUser = async (userData) => {
 };
 
 //login api
-export const loginUser = async (loginData, setToken,token) => {
+export const loginUser = async (loginData, setToken,setRole) => {
   try {
-    const response = await axios.post('http://localhost:1337/api/auth/local', loginData);
-    setToken(response.data.jwt);
-    localStorage.setItem('token', response.data.jwt);
+    const response = await axios.post(`${STRAPI_URL}/api/auth/local`, loginData);
+    if(response.data.jwt){
+       const roleResponse = await axios.get(`${STRAPI_URL}/api/users/me?populate=role`, {
+      headers: {
+        Authorization: `Bearer ${response.data.jwt}`,
+      },
+    });
+    secureLocalStorage.setItem('role', roleResponse.data.role.name);
+    secureLocalStorage.setItem('token', response.data.jwt);
+    setToken(secureLocalStorage.getItem('token'));
+    setRole(secureLocalStorage.getItem('role'));
+    }
     return response.data;
   } catch (error) {
     if (error.response.data.error && error.response.data.error.status === 400) {
